@@ -11,7 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RequestsRouteImport } from './routes/requests'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as MapRouteImport } from './routes/map'
 import { Route as FindRouteImport } from './routes/find'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 
 const RequestsRoute = RequestsRouteImport.update({
@@ -24,9 +26,19 @@ const RegisterRoute = RegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MapRoute = MapRouteImport.update({
+  id: '/map',
+  path: '/map',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FindRoute = FindRouteImport.update({
   id: '/find',
   path: '/find',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,34 +49,42 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/find': typeof FindRoute
+  '/map': typeof MapRoute
   '/register': typeof RegisterRoute
   '/requests': typeof RequestsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/find': typeof FindRoute
+  '/map': typeof MapRoute
   '/register': typeof RegisterRoute
   '/requests': typeof RequestsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/find': typeof FindRoute
+  '/map': typeof MapRoute
   '/register': typeof RegisterRoute
   '/requests': typeof RequestsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/find' | '/register' | '/requests'
+  fullPaths: '/' | '/admin' | '/find' | '/map' | '/register' | '/requests'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/find' | '/register' | '/requests'
-  id: '__root__' | '/' | '/find' | '/register' | '/requests'
+  to: '/' | '/admin' | '/find' | '/map' | '/register' | '/requests'
+  id: '__root__' | '/' | '/admin' | '/find' | '/map' | '/register' | '/requests'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   FindRoute: typeof FindRoute
+  MapRoute: typeof MapRoute
   RegisterRoute: typeof RegisterRoute
   RequestsRoute: typeof RequestsRoute
 }
@@ -85,11 +105,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/map': {
+      id: '/map'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof MapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/find': {
       id: '/find'
       path: '/find'
       fullPath: '/find'
       preLoaderRoute: typeof FindRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -104,7 +138,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   FindRoute: FindRoute,
+  MapRoute: MapRoute,
   RegisterRoute: RegisterRoute,
   RequestsRoute: RequestsRoute,
 }
