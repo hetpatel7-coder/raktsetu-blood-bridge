@@ -25,7 +25,7 @@ export function MobileNav() {
   const { pathname } = useLocation();
   return (
     <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-card/90 backdrop-blur-xl border-t border-border">
-      <div className="grid grid-cols-7">
+      <div className="grid grid-cols-8">
         {ITEMS.map(({ to, label, icon: Icon }) => {
           const active = pathname === to;
           return (
