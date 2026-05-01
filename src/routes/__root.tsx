@@ -10,14 +10,12 @@ import { SosModal } from "@/components/SosModal";
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-serif font-bold text-primary">404</h1>
-        <h2 className="mt-4 text-xl font-semibold">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground font-mono">
-          This page doesn't exist.
-        </p>
-        <a href="/" className="mt-6 inline-block rs-btn rs-btn-primary">
-          GO HOME
+      <div className="max-w-md text-center space-y-3">
+        <h1 className="text-7xl font-serif font-black text-primary">404</h1>
+        <h2 className="text-2xl font-serif font-bold">Page Not Found</h2>
+        <p className="rs-body-sm">This page doesn't exist.</p>
+        <a href="/" className="mt-4 inline-block rs-btn rs-btn-primary">
+          Go Home
         </a>
       </div>
     </div>
@@ -91,7 +89,7 @@ function RootComponent() {
             background: "#111111",
             color: "#f5f5f0",
             border: "1px solid #1f1f1f",
-            fontFamily: "Courier New, monospace",
+            fontFamily: "DM Mono, ui-monospace, monospace",
             fontSize: "13px",
             borderRadius: "12px",
           },
