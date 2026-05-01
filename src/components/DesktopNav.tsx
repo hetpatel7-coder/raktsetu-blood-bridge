@@ -8,6 +8,7 @@ const NAV = [
   { to: "/register", label: "Donate" },
   { to: "/requests", label: "Requests" },
   { to: "/map", label: "Map" },
+  { to: "/heatmap", label: "Heatmap" },
 ] as const;
 
 export function DesktopNav({ onSos }: { onSos: () => void }) {
