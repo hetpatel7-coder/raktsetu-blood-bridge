@@ -217,6 +217,23 @@ function RequestsPage() {
                     <CheckCircle size={14} /> Fulfilled
                   </button>
                 </div>
+                <a
+                  href={`https://wa.me/?text=${encodeURIComponent(
+                    `🚨 URGENT BLOOD NEEDED 🚨\n\nBlood Type: ${r.blood_type}\nHospital: ${r.hospital}\nCity: ${r.city ?? "—"}\nUrgency: ${r.urgency}\nContact: ${r.contact_phone}\n\nPlease help or share with someone who can donate. Every minute counts.\n\n— Shared via RaktSetu App\nraktsetu.lovable.app`
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 w-full inline-flex items-center justify-center gap-2 rounded-[10px] py-2.5 font-mono uppercase active:scale-95 transition-transform"
+                  style={{
+                    background: "rgba(37,211,102,0.1)",
+                    border: "1px solid rgba(37,211,102,0.3)",
+                    color: "#25d366",
+                    fontSize: 11,
+                    letterSpacing: "1px",
+                  }}
+                >
+                  💬 Share on WhatsApp
+                </a>
               </div>
             );
           })}
