@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RequestsRouteImport } from './routes/requests'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as MapRouteImport } from './routes/map'
+import { Route as HeatmapRouteImport } from './routes/heatmap'
 import { Route as FindRouteImport } from './routes/find'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -29,6 +30,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const MapRoute = MapRouteImport.update({
   id: '/map',
   path: '/map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HeatmapRoute = HeatmapRouteImport.update({
+  id: '/heatmap',
+  path: '/heatmap',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FindRoute = FindRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/find': typeof FindRoute
+  '/heatmap': typeof HeatmapRoute
   '/map': typeof MapRoute
   '/register': typeof RegisterRoute
   '/requests': typeof RequestsRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/find': typeof FindRoute
+  '/heatmap': typeof HeatmapRoute
   '/map': typeof MapRoute
   '/register': typeof RegisterRoute
   '/requests': typeof RequestsRoute
@@ -68,22 +76,39 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/find': typeof FindRoute
+  '/heatmap': typeof HeatmapRoute
   '/map': typeof MapRoute
   '/register': typeof RegisterRoute
   '/requests': typeof RequestsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/find' | '/map' | '/register' | '/requests'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/find'
+    | '/heatmap'
+    | '/map'
+    | '/register'
+    | '/requests'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/find' | '/map' | '/register' | '/requests'
-  id: '__root__' | '/' | '/admin' | '/find' | '/map' | '/register' | '/requests'
+  to: '/' | '/admin' | '/find' | '/heatmap' | '/map' | '/register' | '/requests'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/find'
+    | '/heatmap'
+    | '/map'
+    | '/register'
+    | '/requests'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   FindRoute: typeof FindRoute
+  HeatmapRoute: typeof HeatmapRoute
   MapRoute: typeof MapRoute
   RegisterRoute: typeof RegisterRoute
   RequestsRoute: typeof RequestsRoute
@@ -110,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/map'
       fullPath: '/map'
       preLoaderRoute: typeof MapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/heatmap': {
+      id: '/heatmap'
+      path: '/heatmap'
+      fullPath: '/heatmap'
+      preLoaderRoute: typeof HeatmapRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/find': {
@@ -140,6 +172,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   FindRoute: FindRoute,
+  HeatmapRoute: HeatmapRoute,
   MapRoute: MapRoute,
   RegisterRoute: RegisterRoute,
   RequestsRoute: RequestsRoute,
