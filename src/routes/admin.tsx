@@ -53,8 +53,10 @@ function Login({ onSuccess }: { onSuccess: () => void }) {
           <div className="w-14 h-14 mx-auto rounded-2xl bg-primary/15 flex items-center justify-center">
             <Lock className="text-primary" size={24} />
           </div>
-          <h1 className="font-serif font-bold text-2xl">Admin Access</h1>
-          <p className="font-mono text-xs text-muted-foreground">Enter password to continue</p>
+          <h1 className="font-serif font-bold text-3xl">
+            Admin <span style={{ color: "#dc2626" }}>Access</span>
+          </h1>
+          <p className="rs-body-sm">Enter password to continue</p>
         </div>
         <input
           type="password"
@@ -65,10 +67,10 @@ function Login({ onSuccess }: { onSuccess: () => void }) {
           onChange={(e) => setPw(e.target.value)}
         />
         <button type="submit" className="rs-btn rs-btn-primary w-full">
-          LOGIN
+          Login
         </button>
-        <p className="font-mono text-[10px] text-text-muted text-center">
-          Hint for demo: admin123
+        <p className="font-mono text-[10px] text-text-muted text-center" style={{ letterSpacing: "1px" }}>
+          DEMO · admin123
         </p>
       </form>
     </div>
@@ -123,20 +125,19 @@ function Dashboard() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 space-y-5">
-      <header className="flex items-center justify-between">
-        <div>
-          <h1 className="font-serif font-bold text-3xl">
-            Admin <span className="text-primary">Dashboard</span>
+      <header className="flex items-end justify-between">
+        <div className="space-y-2">
+          <div className="rs-eyebrow">Control Center</div>
+          <h1 className="font-serif font-bold text-4xl leading-tight">
+            Admin <span style={{ color: "#dc2626" }}>Dashboard</span>
           </h1>
-          <p className="font-mono text-xs text-muted-foreground mt-1">
-            RaktSetu control center
-          </p>
+          <p className="rs-body">Dashboard for hospitals and blood banks</p>
         </div>
         <button
           onClick={() => { sessionStorage.removeItem("rs-admin"); location.reload(); }}
-          className="rs-btn rs-btn-secondary !py-2 !px-3 text-xs"
+          className="rs-btn rs-btn-secondary !py-2 !px-3"
         >
-          LOGOUT
+          Logout
         </button>
       </header>
 
@@ -186,7 +187,7 @@ function Overview({ donors, requests }: { donors: Donor[]; requests: Req[] }) {
   return (
     <div className="grid lg:grid-cols-2 gap-4">
       <div className="rs-card p-5">
-        <h3 className="font-serif font-bold mb-4">Blood Type Distribution</h3>
+        <h3 className="font-serif font-bold text-xl mb-4">Blood Type Distribution</h3>
         <div className="space-y-2">
           {BLOOD_TYPES.map((b) => {
             const c = donors.filter((d) => d.blood_type === b).length;
@@ -205,7 +206,7 @@ function Overview({ donors, requests }: { donors: Donor[]; requests: Req[] }) {
       </div>
 
       <div className="rs-card p-5">
-        <h3 className="font-serif font-bold mb-4">By City</h3>
+        <h3 className="font-serif font-bold text-xl mb-4">By City</h3>
         <div className="space-y-2">
           {CITIES.map((c) => {
             const n = donors.filter((d) => d.city === c).length;
@@ -220,7 +221,7 @@ function Overview({ donors, requests }: { donors: Donor[]; requests: Req[] }) {
       </div>
 
       <div className="rs-card p-5 lg:col-span-2">
-        <h3 className="font-serif font-bold mb-4">Recent Activity</h3>
+        <h3 className="font-serif font-bold text-xl mb-4">Recent Activity</h3>
         {recent.length === 0 && (
           <p className="font-mono text-xs text-muted-foreground">No activity yet.</p>
         )}

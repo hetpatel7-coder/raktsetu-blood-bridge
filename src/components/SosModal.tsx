@@ -36,17 +36,17 @@ export function SosModal({ open, onClose }: { open: boolean; onClose: () => void
   };
 
   return (
-    <BottomSheet open={open} onClose={onClose} title="🚨 Emergency SOS">
+    <BottomSheet open={open} onClose={onClose} title="Emergency SOS">
       <div className="space-y-5">
         <div>
-          <label className="block text-sm font-mono text-muted-foreground mb-2">
-            BLOOD TYPE
+          <label className="block rs-eyebrow text-muted-foreground mb-2" style={{ color: "#888" }}>
+            Blood Type
           </label>
           <BloodTypeSelector value={bloodType} onChange={setBloodType} />
         </div>
         <div>
-          <label className="block text-sm font-mono text-muted-foreground mb-2">
-            HOSPITAL
+          <label className="block rs-eyebrow text-muted-foreground mb-2" style={{ color: "#888" }}>
+            Hospital
           </label>
           <input
             className="rs-input"
@@ -57,8 +57,8 @@ export function SosModal({ open, onClose }: { open: boolean; onClose: () => void
           />
         </div>
         <div>
-          <label className="block text-sm font-mono text-muted-foreground mb-2">
-            CONTACT PHONE
+          <label className="block rs-eyebrow text-muted-foreground mb-2" style={{ color: "#888" }}>
+            Contact Phone
           </label>
           <input
             className="rs-input"
@@ -79,7 +79,7 @@ export function SosModal({ open, onClose }: { open: boolean; onClose: () => void
           ) : (
             <Siren size={18} />
           )}
-          {loading ? "SENDING..." : "SEND SOS ALERT"}
+          {loading ? "Sending…" : "Send SOS Alert"}
         </button>
       </div>
     </BottomSheet>

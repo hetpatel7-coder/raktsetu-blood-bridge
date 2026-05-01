@@ -22,13 +22,12 @@ function MapPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 space-y-4">
-      <header>
-        <h1 className="font-serif font-bold text-3xl">
-          Donor <span className="text-primary">Map</span>
+      <header className="space-y-2">
+        <div className="rs-eyebrow">Live Coverage</div>
+        <h1 className="font-serif font-bold text-4xl leading-tight">
+          Donor <span style={{ color: "#dc2626" }}>Map</span>
         </h1>
-        <p className="font-mono text-xs text-muted-foreground mt-1">
-          Live donor locations across Gujarat
-        </p>
+        <p className="rs-body">Live donor locations across Gujarat</p>
       </header>
       {Comp ? <Comp /> : <div className="rs-skeleton h-[60vh] rounded-2xl" />}
     </div>

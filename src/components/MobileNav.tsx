@@ -29,8 +29,16 @@ export function MobileNav() {
                 <span className="absolute top-0 inset-x-3 h-[2px] bg-primary rounded-full" />
               )}
               <Icon size={18} />
-              <span className="font-mono text-[10px] font-bold tracking-wide">
-                {label.toUpperCase()}
+              <span
+                className="font-mono"
+                style={{
+                  fontSize: 8,
+                  letterSpacing: "0.5px",
+                  fontWeight: 500,
+                  textTransform: "uppercase",
+                }}
+              >
+                {label}
               </span>
             </Link>
           );

@@ -13,7 +13,7 @@ export function Logo({ size = 28 }: { size?: number }) {
       <div className="leading-tight">
         <div className="font-serif font-bold text-xl tracking-tight">
           <span className="text-foreground">Rakt</span>
-          <span className="text-primary">Setu</span>
+          <span style={{ color: "#dc2626" }}>Setu</span>
         </div>
       </div>
     </div>
