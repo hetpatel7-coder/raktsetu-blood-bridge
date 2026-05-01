@@ -53,26 +53,37 @@ function RegisterPage() {
     return (
       <div className="max-w-md mx-auto px-4 pt-10 text-center space-y-6 animate-rs-fade-up">
         <div className="text-7xl">🎉</div>
-        <h1 className="font-serif font-bold text-3xl text-success">You're a Hero!</h1>
+        <h1 className="font-serif font-bold text-4xl text-success">You're a Hero</h1>
         <div className="rs-card p-6 rs-glow">
-          <div className="font-mono text-xs text-muted-foreground uppercase mb-3">
+          <div className="rs-eyebrow text-muted-foreground mb-3" style={{ color: "#888" }}>
             Donor Card
           </div>
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-primary/15 border-2 border-primary flex items-center justify-center font-mono font-bold text-primary">
+            <div className="w-16 h-16 rounded-full bg-primary/15 border-2 border-primary flex items-center justify-center font-mono font-medium text-primary">
               {done.bloodType}
             </div>
             <div className="text-left">
               <div className="font-serif font-bold text-xl">{done.name}</div>
-              <div className="font-mono text-xs text-muted-foreground">Verified Donor</div>
+              <div
+                className="font-mono mt-0.5"
+                style={{
+                  fontSize: 9,
+                  letterSpacing: "1.5px",
+                  color: "#3b82f6",
+                  textTransform: "uppercase",
+                  fontWeight: 500,
+                }}
+              >
+                Verified
+              </div>
             </div>
           </div>
         </div>
-        <p className="font-mono text-sm text-muted-foreground px-4">
+        <p className="rs-body px-4">
           You'll receive alerts when someone nearby needs your blood.
         </p>
         <a href="/" className="rs-btn rs-btn-secondary inline-flex">
-          BACK TO HOME
+          Back to Home
         </a>
       </div>
     );
@@ -80,21 +91,20 @@ function RegisterPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
-      <header>
-        <h1 className="font-serif font-bold text-3xl">
-          Be a <span className="text-primary">Donor</span>
+      <header className="space-y-2">
+        <div className="rs-eyebrow">Join the Network</div>
+        <h1 className="font-serif font-bold text-4xl leading-tight">
+          Be a <span style={{ color: "#dc2626" }}>Donor</span>
         </h1>
-        <p className="font-mono text-sm text-muted-foreground mt-1">
-          Join the network. Save lives. 30 seconds.
-        </p>
+        <p className="rs-body">Register and join our network</p>
       </header>
 
       <div className="rs-card p-5 rs-glow bg-gradient-to-br from-primary/15 to-card">
-        <div className="font-serif font-bold text-lg leading-snug">
-          One donation can save up to <span className="text-primary">3 lives</span>
+        <div className="font-serif font-bold text-xl leading-snug">
+          One donation. <span style={{ color: "#dc2626" }}>Three</span> lives.
         </div>
-        <div className="font-mono text-xs text-muted-foreground mt-1">
-          India needs 2.5 crore units every year
+        <div className="rs-body-sm mt-1.5">
+          India needs 2.5 crore units every year.
         </div>
       </div>
 
@@ -159,7 +169,7 @@ function RegisterPage() {
 
       <button onClick={submit} disabled={loading} className="rs-btn rs-btn-primary w-full">
         {loading ? <Loader2 className="animate-spin" size={18} /> : <HeartHandshake size={18} />}
-        {loading ? "REGISTERING..." : "REGISTER AS DONOR"}
+        {loading ? "Registering…" : "Register as Donor"}
       </button>
     </div>
   );
