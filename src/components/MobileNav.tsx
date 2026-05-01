@@ -1,5 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Home, Search, HeartHandshake, ListChecks, Map, Settings } from "lucide-react";
+import { Home, Search, HeartHandshake, ListChecks, Map, Flame, Settings } from "lucide-react";
 
 const ITEMS = [
   { to: "/", label: "Home", icon: Home },
@@ -7,6 +7,7 @@ const ITEMS = [
   { to: "/register", label: "Donate", icon: HeartHandshake },
   { to: "/requests", label: "Requests", icon: ListChecks },
   { to: "/map", label: "Map", icon: Map },
+  { to: "/heatmap", label: "Heatmap", icon: Flame },
   { to: "/admin", label: "Admin", icon: Settings },
 ] as const;
 
