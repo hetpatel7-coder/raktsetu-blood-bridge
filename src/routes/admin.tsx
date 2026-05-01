@@ -405,4 +405,4 @@ function RequestsTab({ requests, reload }: { requests: Req[]; reload: () => void
   );
 }
 
-function _unusedLoader() { return <Loader2 />; } // keep import in case bundler tree-shake stripper complains
+
