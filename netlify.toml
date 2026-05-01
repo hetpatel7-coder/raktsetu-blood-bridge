@@ -1,0 +1,6 @@
+[build]
+  command = "npm install --save-dev @netlify/vite-plugin-tanstack-start && npm run build"
+  publish = ".output/public"
+
+[functions]
+  directory = ".output/server"
