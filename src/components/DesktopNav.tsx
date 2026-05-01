@@ -4,8 +4,8 @@ import { Siren } from "lucide-react";
 
 const NAV = [
   { to: "/", label: "Home" },
-  { to: "/find", label: "Find Donor" },
-  { to: "/register", label: "Be a Donor" },
+  { to: "/find", label: "Find" },
+  { to: "/register", label: "Donate" },
   { to: "/requests", label: "Requests" },
   { to: "/map", label: "Map" },
 ] as const;
@@ -25,19 +25,25 @@ export function DesktopNav({ onSos }: { onSos: () => void }) {
               <Link
                 key={item.to}
                 to={item.to}
-                className={`px-4 py-2 rounded-lg font-mono text-sm font-bold transition-colors ${
+                className={`px-4 py-2 rounded-lg font-mono transition-colors ${
                   active
                     ? "text-primary bg-primary/10"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
+                style={{
+                  fontSize: 11,
+                  letterSpacing: "1.5px",
+                  fontWeight: 500,
+                  textTransform: "uppercase",
+                }}
               >
                 {item.label}
               </Link>
             );
           })}
         </nav>
-        <button onClick={onSos} className="rs-btn rs-btn-sos !py-2.5 !px-4 text-sm">
-          <Siren size={16} /> EMERGENCY SOS
+        <button onClick={onSos} className="rs-btn rs-btn-sos !py-2.5 !px-4">
+          <Siren size={16} /> Emergency SOS
         </button>
       </div>
     </header>
