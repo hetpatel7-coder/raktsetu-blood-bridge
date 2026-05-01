@@ -117,17 +117,16 @@ function RequestsPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-6 space-y-5">
-      <header className="flex items-center justify-between gap-3">
-        <div>
-          <h1 className="font-serif font-bold text-3xl">
-            Live <span className="text-primary">Requests</span>
+      <header className="flex items-end justify-between gap-3">
+        <div className="space-y-2">
+          <div className="rs-eyebrow">Live Request</div>
+          <h1 className="font-serif font-bold text-4xl leading-tight">
+            Live <span style={{ color: "#dc2626" }}>Requests</span>
           </h1>
-          <p className="font-mono text-xs text-muted-foreground mt-1">
-            Real-time blood requests across Gujarat
-          </p>
+          <p className="rs-body">View active requests near you</p>
         </div>
-        <button onClick={() => setPostOpen(true)} className="rs-btn rs-btn-primary !py-2.5 !px-3 text-xs">
-          <Plus size={14} /> POST
+        <button onClick={() => setPostOpen(true)} className="rs-btn rs-btn-primary !py-2.5 !px-3">
+          <Plus size={14} /> Post
         </button>
       </header>
 
@@ -194,8 +193,8 @@ function RequestsPage() {
                       <span className="font-serif font-bold">
                         {r.patient_name || "Anonymous"}
                       </span>
-                      <span className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-bold ${badge}`}>
-                        {r.urgency.toUpperCase()}
+                      <span className={`px-2 py-0.5 rounded-full rs-pill ${badge}`}>
+                        {r.urgency}
                       </span>
                     </div>
                     <div className="font-mono text-xs text-muted-foreground mt-1 truncate">
@@ -208,14 +207,14 @@ function RequestsPage() {
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2 mt-3">
-                  <a href={`tel:${r.contact_phone}`} className="rs-btn rs-btn-primary !py-2.5 text-xs">
-                    <Phone size={14} /> CALL
+                  <a href={`tel:${r.contact_phone}`} className="rs-btn rs-btn-primary !py-2.5">
+                    <Phone size={14} /> Call
                   </a>
                   <button
                     onClick={() => markFulfilled(r.id)}
-                    className="rs-btn rs-btn-secondary !py-2.5 text-xs"
+                    className="rs-btn rs-btn-secondary !py-2.5"
                   >
-                    <CheckCircle size={14} /> FULFILLED
+                    <CheckCircle size={14} /> Fulfilled
                   </button>
                 </div>
               </div>
@@ -244,25 +243,28 @@ function RequestsPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <Siren size={14} className="text-primary" />
-                    <span className="font-serif font-bold">SOS Alert</span>
+                    <span className="font-serif font-bold">Active Emergency</span>
                   </div>
-                  <div className="font-mono text-xs text-muted-foreground mt-1 truncate">
+                  <div className="rs-body-sm mt-1 truncate">
                     {s.hospital}
                   </div>
-                  <div className="font-mono text-[10px] text-text-muted mt-0.5">
+                  <div
+                    className="font-mono mt-0.5"
+                    style={{ fontSize: 10, color: "#555", letterSpacing: "0.5px" }}
+                  >
                     {formatDistanceToNowStrict(new Date(s.created_at), { addSuffix: true })}
                   </div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2 mt-3">
-                <a href={`tel:${s.contact_phone}`} className="rs-btn rs-btn-sos !py-3 text-xs">
-                  <Phone size={14} /> CALL NOW
+                <a href={`tel:${s.contact_phone}`} className="rs-btn rs-btn-sos !py-3">
+                  <Phone size={14} /> Call Now
                 </a>
                 <button
                   onClick={() => resolveSos(s.id)}
-                  className="rs-btn rs-btn-secondary !py-3 text-xs"
+                  className="rs-btn rs-btn-secondary !py-3"
                 >
-                  <CheckCircle size={14} /> RESOLVE
+                  <CheckCircle size={14} /> Resolve
                 </button>
               </div>
             </div>
@@ -309,7 +311,7 @@ function PostRequestModal({ open, onClose }: { open: boolean; onClose: () => voi
   };
 
   return (
-    <BottomSheet open={open} onClose={onClose} title="Post Blood Request">
+    <BottomSheet open={open} onClose={onClose} title="Post Request">
       <div className="space-y-4">
         <div>
           <label className="block font-mono text-xs text-muted-foreground mb-2 uppercase">
@@ -358,7 +360,7 @@ function PostRequestModal({ open, onClose }: { open: boolean; onClose: () => voi
         </div>
         <button onClick={submit} disabled={loading} className="rs-btn rs-btn-primary w-full">
           {loading ? <Loader2 className="animate-spin" size={18} /> : <Plus size={18} />}
-          {loading ? "POSTING..." : "POST REQUEST"}
+          {loading ? "Posting…" : "Post Request"}
         </button>
       </div>
     </BottomSheet>
