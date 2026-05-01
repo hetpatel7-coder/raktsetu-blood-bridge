@@ -201,6 +201,25 @@ function HomePage() {
         </div>
       </button>
 
+      {/* Share with someone */}
+      <a
+        href={`https://wa.me/?text=${encodeURIComponent(
+          `🩸 RaktSetu — Real-time blood donor network for Gujarat.\n\nFind verified donors near you in seconds, or register to save lives.\n\nraktsetu.lovable.app\n\n— Ek Boond, Ek Zindagi`
+        )}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="-mt-6 mx-auto inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-mono uppercase active:scale-95 transition-transform"
+        style={{
+          background: "rgba(37,211,102,0.08)",
+          border: "1px solid rgba(37,211,102,0.25)",
+          color: "#25d366",
+          fontSize: 11,
+          letterSpacing: "1px",
+        }}
+      >
+        💬 Share RaktSetu with someone who might need it
+      </a>
+
       {/* Actions */}
       <section className="space-y-3 animate-rs-fade-up" style={{ animationDelay: "60ms" }}>
         <div className="rs-eyebrow">Quick Actions</div>

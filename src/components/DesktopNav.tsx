@@ -6,6 +6,7 @@ const NAV = [
   { to: "/", label: "Home" },
   { to: "/find", label: "Find" },
   { to: "/register", label: "Donate" },
+  { to: "/leaderboard", label: "🏆 Top" },
   { to: "/requests", label: "Requests" },
   { to: "/map", label: "Map" },
   { to: "/heatmap", label: "Heatmap" },

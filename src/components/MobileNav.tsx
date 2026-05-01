@@ -1,10 +1,20 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Home, Search, HeartHandshake, ListChecks, Map, Flame, Settings } from "lucide-react";
+import {
+  Home,
+  Search,
+  HeartHandshake,
+  Trophy,
+  ListChecks,
+  Map,
+  Flame,
+  Settings,
+} from "lucide-react";
 
 const ITEMS = [
   { to: "/", label: "Home", icon: Home },
   { to: "/find", label: "Find", icon: Search },
   { to: "/register", label: "Donate", icon: HeartHandshake },
+  { to: "/leaderboard", label: "Top", icon: Trophy },
   { to: "/requests", label: "Requests", icon: ListChecks },
   { to: "/map", label: "Map", icon: Map },
   { to: "/heatmap", label: "Heatmap", icon: Flame },
@@ -15,7 +25,7 @@ export function MobileNav() {
   const { pathname } = useLocation();
   return (
     <nav className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-card/90 backdrop-blur-xl border-t border-border">
-      <div className="grid grid-cols-7">
+      <div className="grid grid-cols-8">
         {ITEMS.map(({ to, label, icon: Icon }) => {
           const active = pathname === to;
           return (
