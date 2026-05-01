@@ -72,13 +72,12 @@ function FindPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
-      <header>
-        <h1 className="font-serif font-bold text-3xl">
-          Find <span className="text-primary">Donor</span>
+      <header className="space-y-2">
+        <div className="rs-eyebrow">Nearby Donors</div>
+        <h1 className="font-serif font-bold text-4xl leading-tight">
+          Find <span style={{ color: "#dc2626" }}>Donor</span>
         </h1>
-        <p className="font-mono text-sm text-muted-foreground mt-1">
-          Search compatible donors near you
-        </p>
+        <p className="rs-body">Search verified donors by blood type</p>
       </header>
 
       <div className="rs-card p-5 space-y-5">
@@ -128,7 +127,7 @@ function FindPage() {
           className="rs-btn rs-btn-primary w-full"
         >
           {loading ? <Loader2 className="animate-spin" size={18} /> : <HeartPulse size={18} />}
-          {loading ? "SEARCHING..." : "FIND DONORS"}
+          {loading ? "Searching…" : "Find Donors"}
         </button>
       </div>
 
@@ -144,19 +143,19 @@ function FindPage() {
       {!loading && searched && donors.length === 0 && (
         <div className="rs-card p-8 text-center space-y-3">
           <Frown size={40} className="mx-auto text-muted-foreground" />
-          <div className="font-serif font-bold text-lg">No donors found</div>
-          <p className="font-mono text-xs text-muted-foreground">
-            Try the Emergency SOS to alert nearby donors instantly.
+          <div className="font-serif font-bold text-lg">No Donors Found</div>
+          <p className="rs-body-sm">
+            Try Emergency SOS to alert nearby donors instantly.
           </p>
         </div>
       )}
 
       {!loading && donors.length > 0 && (
         <div className="space-y-3">
-          <div className="font-mono text-xs text-muted-foreground uppercase tracking-wider px-1">
-            <span className="text-success font-bold">{available} Available</span>
-            <span className="mx-2 text-text-muted">•</span>
-            <span>{donors.length} Compatible Donors</span>
+          <div className="rs-eyebrow px-1">
+            <span className="text-success">● {available} Available</span>
+            <span className="mx-2 text-text-muted">·</span>
+            <span className="text-muted-foreground">{donors.length} Compatible</span>
           </div>
 
           {donors.map((d, i) => {
@@ -195,13 +194,13 @@ function FindPage() {
                     </div>
                   </div>
                   <div
-                    className={`shrink-0 px-2.5 py-1 rounded-full font-mono text-[10px] font-bold ${
+                    className={`shrink-0 px-2.5 py-1 rounded-full rs-pill ${
                       d.available
                         ? "bg-success/15 text-success"
                         : "bg-muted text-muted-foreground"
                     }`}
                   >
-                    {d.available ? "AVAILABLE" : "BUSY"}
+                    {d.available ? "● Available" : "○ Busy"}
                   </div>
                 </button>
 
@@ -209,23 +208,23 @@ function FindPage() {
                   <div className="px-4 pb-4 pt-1 grid grid-cols-3 gap-2 animate-rs-fade-up">
                     <a
                       href={`tel:${d.phone}`}
-                      className="rs-btn rs-btn-secondary !py-2.5 text-xs"
+                      className="rs-btn rs-btn-secondary !py-2.5"
                     >
-                      <Phone size={14} /> CALL
+                      <Phone size={14} /> Call
                     </a>
                     <a
                       href={`https://wa.me/${d.phone.replace(/\D/g, "")}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="rs-btn rs-btn-secondary !py-2.5 text-xs"
+                      className="rs-btn rs-btn-secondary !py-2.5"
                     >
-                      <MessageCircle size={14} /> WHATSAPP
+                      <MessageCircle size={14} /> WhatsApp
                     </a>
                     <button
                       onClick={() => sendRequest(d)}
-                      className="rs-btn rs-btn-primary !py-2.5 text-xs"
+                      className="rs-btn rs-btn-primary !py-2.5"
                     >
-                      🩸 REQUEST
+                      🩸 Request
                     </button>
                   </div>
                 )}
