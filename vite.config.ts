@@ -1,16 +1,27 @@
 import { defineConfig } from 'vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
-import { nitro } from 'nitro/vite'
 import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import viteTsConfigPaths from 'vite-tsconfig-paths'
 
-export default defineConfig({
-  plugins: [
+const isVercel = process.env.VERCEL === '1'
+
+async function getPlugins() {
+  const base = [
     tanstackStart(),
-    nitro({ preset: 'vercel' }),
     viteReact(),
     tailwindcss(),
     viteTsConfigPaths(),
-  ],
-})
+  ]
+
+  if (isVercel) {
+    const { nitro } = await import('nitro/vite')
+    return [...base, nitro({ preset: 'vercel' })]
+  }
+
+  return base
+}
+
+export default defineConfig(async () => ({
+  plugins: await getPlugins(),
+}))
