@@ -109,13 +109,13 @@ function FindPage() {
                 key={u.k}
                 type="button"
                 onClick={() => setUrgency(u.k as typeof urgency)}
-                className={`py-2.5 rounded-xl border font-mono text-xs font-bold transition-all active:scale-95 ${
+                className={`py-2.5 rounded-xl border font-mono text-xs uppercase tracking-wider transition-all active:scale-95 ${
                   urgency === u.k
                     ? "bg-primary/15 border-primary text-foreground"
                     : "bg-card border-border text-muted-foreground"
                 }`}
               >
-                {u.e} {u.l.toUpperCase()}
+                {u.e} {u.l}
               </button>
             ))}
           </div>
