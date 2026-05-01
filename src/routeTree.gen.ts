@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as RequestsRouteImport } from './routes/requests'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as MapRouteImport } from './routes/map'
+import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as HeatmapRouteImport } from './routes/heatmap'
 import { Route as FindRouteImport } from './routes/find'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -30,6 +31,11 @@ const RegisterRoute = RegisterRouteImport.update({
 const MapRoute = MapRouteImport.update({
   id: '/map',
   path: '/map',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeaderboardRoute = LeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HeatmapRoute = HeatmapRouteImport.update({
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/find': typeof FindRoute
   '/heatmap': typeof HeatmapRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/map': typeof MapRoute
   '/register': typeof RegisterRoute
   '/requests': typeof RequestsRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/find': typeof FindRoute
   '/heatmap': typeof HeatmapRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/map': typeof MapRoute
   '/register': typeof RegisterRoute
   '/requests': typeof RequestsRoute
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/find': typeof FindRoute
   '/heatmap': typeof HeatmapRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/map': typeof MapRoute
   '/register': typeof RegisterRoute
   '/requests': typeof RequestsRoute
@@ -88,17 +97,27 @@ export interface FileRouteTypes {
     | '/admin'
     | '/find'
     | '/heatmap'
+    | '/leaderboard'
     | '/map'
     | '/register'
     | '/requests'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/find' | '/heatmap' | '/map' | '/register' | '/requests'
+  to:
+    | '/'
+    | '/admin'
+    | '/find'
+    | '/heatmap'
+    | '/leaderboard'
+    | '/map'
+    | '/register'
+    | '/requests'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/find'
     | '/heatmap'
+    | '/leaderboard'
     | '/map'
     | '/register'
     | '/requests'
@@ -109,6 +128,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   FindRoute: typeof FindRoute
   HeatmapRoute: typeof HeatmapRoute
+  LeaderboardRoute: typeof LeaderboardRoute
   MapRoute: typeof MapRoute
   RegisterRoute: typeof RegisterRoute
   RequestsRoute: typeof RequestsRoute
@@ -135,6 +155,13 @@ declare module '@tanstack/react-router' {
       path: '/map'
       fullPath: '/map'
       preLoaderRoute: typeof MapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leaderboard': {
+      id: '/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof LeaderboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/heatmap': {
@@ -173,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   FindRoute: FindRoute,
   HeatmapRoute: HeatmapRoute,
+  LeaderboardRoute: LeaderboardRoute,
   MapRoute: MapRoute,
   RegisterRoute: RegisterRoute,
   RequestsRoute: RequestsRoute,
