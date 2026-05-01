@@ -59,11 +59,11 @@ function StatCard({
       {loading ? (
         <div className="rs-skeleton h-9 w-16 rounded-md mb-2" />
       ) : (
-        <div className="font-mono font-bold text-3xl sm:text-4xl text-primary leading-none">
+        <div className="font-mono font-medium text-3xl sm:text-4xl text-primary leading-none">
           {n}
         </div>
       )}
-      <div className="font-mono text-[11px] sm:text-xs text-muted-foreground mt-2 uppercase tracking-wider">
+      <div className="rs-pill text-muted-foreground mt-2">
         {label}
       </div>
     </div>
@@ -113,121 +113,183 @@ function HomePage() {
       to: "/find" as const,
       emoji: "🔍",
       title: "Find Donor",
-      desc: "Search compatible donors near you",
+      accent: "Donor",
+      desc: "Search verified donors by blood type",
       icon: Search,
     },
     {
       to: "/register" as const,
       emoji: "🩸",
       title: "Be a Donor",
-      desc: "Join the network in 30 seconds",
+      accent: "Donor",
+      desc: "Register and join our network",
       icon: HeartHandshake,
     },
     {
       to: "/requests" as const,
       emoji: "📋",
       title: "Live Requests",
-      desc: "See active blood requests",
+      accent: "Live",
+      desc: "View active requests near you",
       icon: ListChecks,
     },
     {
       to: "/admin" as const,
       emoji: "⚙️",
       title: "Admin Panel",
-      desc: "Manage donors and requests",
+      accent: "Admin",
+      desc: "Dashboard for hospitals and blood banks",
       icon: Settings,
     },
   ];
 
   return (
-    <div className="max-w-3xl lg:max-w-5xl mx-auto px-4 sm:px-6 pt-6 lg:pt-10 space-y-8">
-      {/* Header (mobile shows logo) */}
-      <header className="lg:hidden flex flex-col items-center text-center pt-4">
-        <Logo size={36} />
-        <p className="font-mono text-xs text-muted-foreground mt-2">
-          Ek Boond, Ek Zindagi
-        </p>
-      </header>
-
-      <header className="hidden lg:block">
-        <h1 className="font-serif text-5xl font-bold leading-tight">
-          Real-time blood donor network
-          <span className="block text-primary mt-1">for Gujarat.</span>
+    <div className="max-w-3xl lg:max-w-5xl mx-auto px-4 sm:px-6 pt-6 lg:pt-10 space-y-10">
+      {/* Hero */}
+      <header className="text-center lg:text-left pt-2 space-y-3">
+        <div className="rs-tagline-gu">Ek Boond · Ek Zindagi</div>
+        <h1 className="font-serif font-black text-5xl sm:text-6xl lg:text-7xl leading-[0.95] tracking-tight">
+          <span className="text-foreground">Rakt</span>
+          <span style={{ color: "#dc2626" }}>Setu</span>
         </h1>
-        <p className="font-mono text-sm text-muted-foreground mt-3 max-w-xl">
-          Ek Boond, Ek Zindagi — One Drop, One Life.
+        <p className="rs-tagline-en">
+          One Drop, One Life — Gujarat's Blood Bridge
         </p>
       </header>
 
       {/* Live stats */}
-      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 animate-rs-fade-up">
-        <StatCard value={stats.donors} label="Active Donors" loading={loading} />
-        <StatCard value={stats.saved} label="Lives Saved" loading={loading} />
-        <StatCard value={stats.today} label="Requests Today" loading={loading} />
-        <StatCard value={stats.cities} label="Cities Covered" loading={loading} />
+      <section className="space-y-3 animate-rs-fade-up">
+        <div className="rs-eyebrow">Live Network</div>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <StatCard value={stats.donors} label="Active Donors" loading={loading} />
+          <StatCard value={stats.saved} label="Lives Saved" loading={loading} />
+          <StatCard value={stats.today} label="Requests Today" loading={loading} />
+          <StatCard value={stats.cities} label="Cities Covered" loading={loading} />
+        </div>
       </section>
 
       {/* SOS */}
       <button
         onClick={() => setSosOpen(true)}
-        className="rs-btn rs-btn-sos w-full !py-5 text-base animate-rs-pulse-glow"
+        className="w-full rounded-2xl p-5 text-left animate-rs-pulse-glow"
+        style={{
+          background: "linear-gradient(135deg, #ef4444, #991b1b)",
+          boxShadow: "0 8px 24px -8px rgba(220, 38, 38, 0.6)",
+        }}
       >
-        <Siren size={22} />
-        EMERGENCY SOS — Need Blood NOW
+        <div className="flex items-center gap-3">
+          <Siren size={22} className="text-white shrink-0" />
+          <div className="min-w-0">
+            <div
+              className="font-mono uppercase text-white"
+              style={{ fontSize: 13, letterSpacing: "1px", fontWeight: 500 }}
+            >
+              Emergency SOS — Need Blood Now
+            </div>
+            <div
+              className="mt-1"
+              style={{
+                fontFamily: "DM Sans, sans-serif",
+                fontWeight: 300,
+                fontSize: 11,
+                color: "rgba(255,255,255,0.65)",
+              }}
+            >
+              Alerts all compatible donors instantly
+            </div>
+          </div>
+        </div>
       </button>
 
       {/* Actions */}
-      <section
-        className="grid grid-cols-2 gap-3 animate-rs-fade-up"
-        style={{ animationDelay: "60ms" }}
-      >
-        {actions.map((a, i) => (
-          <Link
-            key={a.to}
-            to={a.to}
-            className="rs-card rs-card-hover p-5 block group"
-            style={{ animationDelay: `${i * 60}ms` }}
-          >
-            <div className="text-3xl mb-3">{a.emoji}</div>
-            <div className="font-serif font-bold text-lg group-hover:text-primary transition-colors">
-              {a.title}
-            </div>
-            <div className="font-mono text-xs text-muted-foreground mt-1">
-              {a.desc}
-            </div>
-          </Link>
-        ))}
+      <section className="space-y-3 animate-rs-fade-up" style={{ animationDelay: "60ms" }}>
+        <div className="rs-eyebrow">Quick Actions</div>
+        <div className="grid grid-cols-2 gap-3">
+          {actions.map((a, i) => {
+            const [pre, post] = a.title.split(a.accent);
+            return (
+              <Link
+                key={a.to}
+                to={a.to}
+                className="rs-card rs-card-hover p-5 block group"
+                style={{ animationDelay: `${i * 60}ms` }}
+              >
+                <div className="text-3xl mb-3">{a.emoji}</div>
+                <div className="font-serif font-bold text-lg leading-tight">
+                  <span className="text-foreground">{pre}</span>
+                  <span style={{ color: "#dc2626" }}>{a.accent}</span>
+                  <span className="text-foreground">{post}</span>
+                </div>
+                <div className="rs-body-sm mt-1.5">{a.desc}</div>
+              </Link>
+            );
+          })}
+        </div>
       </section>
 
       {/* How it works */}
       <section className="space-y-4">
-        <h2 className="font-serif font-bold text-2xl">How it works</h2>
-        <div className="grid sm:grid-cols-3 gap-3">
+        <div className="rs-eyebrow">How It Works</div>
+        <h2 className="font-serif font-bold text-3xl leading-tight">
+          Three Steps to <span style={{ color: "#dc2626" }}>Save</span> a Life
+        </h2>
+        <div className="grid sm:grid-cols-3 gap-3 pt-2">
           {[
-            { n: "01", t: "Select Blood Type", d: "Pick the type you need" },
-            { n: "02", t: "AI Finds Nearest Donor", d: "We match compatible donors" },
-            { n: "03", t: "Connect in Seconds", d: "Call or WhatsApp instantly" },
+            {
+              n: "01",
+              t: "Select Blood Type & Location",
+              d: "Choose blood group and city. We instantly query thousands of verified donors.",
+            },
+            {
+              n: "02",
+              t: "AI Finds Compatible Donors",
+              d: "Our engine ranks donors by compatibility, proximity, and availability in real time.",
+            },
+            {
+              n: "03",
+              t: "Connect Directly in Seconds",
+              d: "Call or WhatsApp the donor directly. No middleman. No delay. Life saved.",
+            },
           ].map((s) => (
             <div key={s.n} className="rs-card p-5">
-              <div className="font-mono font-bold text-primary text-sm mb-2">
+              <div
+                className="font-mono"
+                style={{
+                  fontSize: 10,
+                  letterSpacing: "2px",
+                  color: "#dc2626",
+                  fontWeight: 500,
+                }}
+              >
                 STEP {s.n}
               </div>
-              <div className="font-serif font-bold text-lg">{s.t}</div>
-              <div className="font-mono text-xs text-muted-foreground mt-1">
-                {s.d}
+              <div className="font-serif font-bold text-lg mt-2 leading-snug">
+                {s.t}
               </div>
+              <div className="rs-body-sm mt-2 leading-relaxed">{s.d}</div>
             </div>
           ))}
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="pt-8 pb-6 text-center">
-        <p className="font-mono text-xs text-muted-foreground">
-          RaktSetu • Made for Gujarat 🇮🇳
+      <footer className="pt-8 pb-6 text-center space-y-1.5">
+        <p
+          className="font-serif font-bold"
+          style={{ fontSize: 13, color: "#333" }}
+        >
+          RaktSetu · Gujarat, India
         </p>
-        <p className="font-mono text-[10px] text-text-muted mt-1">
-          Saving lives one connection at a time
+        <p
+          className="font-mono"
+          style={{
+            fontSize: 10,
+            color: "#dc2626",
+            letterSpacing: "1px",
+            textTransform: "uppercase",
+          }}
+        >
+          Saving lives · one connection at a time
         </p>
       </footer>
 
