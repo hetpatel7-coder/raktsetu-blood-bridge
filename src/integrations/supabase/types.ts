@@ -14,7 +14,111 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      blood_requests: {
+        Row: {
+          blood_type: string
+          city: string | null
+          contact_phone: string
+          created_at: string
+          hospital: string
+          id: string
+          patient_name: string | null
+          status: string
+          urgency: string
+        }
+        Insert: {
+          blood_type: string
+          city?: string | null
+          contact_phone: string
+          created_at?: string
+          hospital: string
+          id?: string
+          patient_name?: string | null
+          status?: string
+          urgency?: string
+        }
+        Update: {
+          blood_type?: string
+          city?: string | null
+          contact_phone?: string
+          created_at?: string
+          hospital?: string
+          id?: string
+          patient_name?: string | null
+          status?: string
+          urgency?: string
+        }
+        Relationships: []
+      }
+      donors: {
+        Row: {
+          available: boolean
+          blood_type: string
+          city: string
+          created_at: string
+          donations_count: number
+          id: string
+          lat: number | null
+          lng: number | null
+          name: string
+          phone: string
+          verified: boolean
+        }
+        Insert: {
+          available?: boolean
+          blood_type: string
+          city: string
+          created_at?: string
+          donations_count?: number
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          name: string
+          phone: string
+          verified?: boolean
+        }
+        Update: {
+          available?: boolean
+          blood_type?: string
+          city?: string
+          created_at?: string
+          donations_count?: number
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          name?: string
+          phone?: string
+          verified?: boolean
+        }
+        Relationships: []
+      }
+      sos_alerts: {
+        Row: {
+          blood_type: string
+          contact_phone: string
+          created_at: string
+          hospital: string
+          id: string
+          status: string
+        }
+        Insert: {
+          blood_type: string
+          contact_phone: string
+          created_at?: string
+          hospital: string
+          id?: string
+          status?: string
+        }
+        Update: {
+          blood_type?: string
+          contact_phone?: string
+          created_at?: string
+          hospital?: string
+          id?: string
+          status?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
