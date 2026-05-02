@@ -1,18 +1,9 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "api/server.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["dist/server/**"]
-      }
-    },
-    {
-      "src": "dist/client/**",
-      "use": "@vercel/static"
+  "functions": {
+    "api/server.js": {
+      "includeFiles": "dist/server/**"
     }
-  ],
+  },
   "routes": [
     {
       "src": "/assets/(.*)",
