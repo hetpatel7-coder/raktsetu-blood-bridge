@@ -1,12 +1,12 @@
-import { T as jsxRuntimeExports } from "./worker-entry-IDUWrsFe.js";
-import { e as CITIES } from "./router-dIrcSwBL.js";
+import { jsx } from "react/jsx-runtime";
+import { c as CITIES } from "./router-Bog5Uvn9.js";
 function CitySelector({
   value,
   onChange
 }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none", children: CITIES.map((c) => {
+  return /* @__PURE__ */ jsx("div", { className: "flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none", children: CITIES.map((c) => {
     const active = value === c;
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    return /* @__PURE__ */ jsx(
       "button",
       {
         type: "button",
