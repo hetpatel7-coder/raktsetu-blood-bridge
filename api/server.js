@@ -1,2 +1,2 @@
-import { createServer } from '../dist/server/index.js'
-export default createServer()
+import { handler } from '../dist/server/index.js'
+export default handler
