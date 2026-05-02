@@ -7,7 +7,7 @@ import { Readable } from "node:stream";
 export const config = {
   // Use Node.js runtime (not Edge) — TanStack Start's default SSR bundle
   // targets Node when the Cloudflare plugin is disabled.
-  runtime: "nodejs20.x",
+  runtime: "nodejs",
 };
 
 function buildRequest(req) {
