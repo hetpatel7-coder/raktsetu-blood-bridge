@@ -1,7 +1,7 @@
 // Vercel serverless function that proxies all requests to the TanStack Start
 // SSR bundle. The default export of dist/server/index.js is a Worker-style
 // `{ fetch }` object created by createServerEntry().
-import server from "../dist/server/index.js";
+import server from "../dist/server/server.js";
 import { Readable } from "node:stream";
 
 export const config = {
