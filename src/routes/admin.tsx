@@ -2,9 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import toast from "react-hot-toast";
+import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { BLOOD_TYPES, CITIES } from "@/lib/blood";
-import { Lock, Trash2, Search } from "lucide-react";
+import { Lock, Trash2, Search, LogOut } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -17,38 +18,121 @@ export const Route = createFileRoute("/admin")({
 });
 
 function AdminPage() {
-  const [authed, setAuthed] = useState(false);
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setAuthed(sessionStorage.getItem("rs-admin") === "1");
+  const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  const checkAdmin = async (uid: string | null) => {
+    if (!uid) {
+      setIsAdmin(false);
+      return;
     }
+    const { data, error } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", uid)
+      .eq("role", "admin")
+      .maybeSingle();
+    setIsAdmin(!error && !!data);
+  };
+
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      const uid = session?.user?.id ?? null;
+      setUserId(uid);
+      // Defer Supabase call to avoid deadlock inside the listener
+      setTimeout(() => {
+        void checkAdmin(uid).finally(() => setLoading(false));
+      }, 0);
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      const uid = session?.user?.id ?? null;
+      setUserId(uid);
+      void checkAdmin(uid).finally(() => setLoading(false));
+    });
+
+    return () => sub.subscription.unsubscribe();
   }, []);
-  if (!authed) return <Login onSuccess={() => setAuthed(true)} />;
+
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="rs-skeleton h-12 w-48 rounded-xl" />
+      </div>
+    );
+  }
+
+  if (!userId) return <AuthForm />;
+  if (!isAdmin) return <NotAuthorized />;
   return <Dashboard />;
 }
 
-function Login({ onSuccess }: { onSuccess: () => void }) {
-  const [pw, setPw] = useState("");
-  const [shake, setShake] = useState(false);
+function NotAuthorized() {
+  return (
+    <div className="min-h-[60vh] flex items-center justify-center px-4">
+      <div className="rs-card p-8 max-w-sm text-center space-y-4">
+        <div className="w-14 h-14 mx-auto rounded-2xl bg-primary/15 flex items-center justify-center">
+          <Lock className="text-primary" size={24} />
+        </div>
+        <h1 className="font-serif font-bold text-2xl">Not Authorized</h1>
+        <p className="rs-body-sm">Your account does not have admin access.</p>
+        <button
+          onClick={() => supabase.auth.signOut()}
+          className="rs-btn rs-btn-secondary w-full"
+        >
+          Sign out
+        </button>
+      </div>
+    </div>
+  );
+}
 
-  const submit = (e: React.FormEvent) => {
+const credSchema = z.object({
+  email: z.string().trim().email("Invalid email").max(255),
+  password: z.string().min(6, "At least 6 characters").max(72),
+});
+
+function AuthForm() {
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (pw === "admin123") {
-      sessionStorage.setItem("rs-admin", "1");
-      onSuccess();
-    } else {
-      setShake(true);
-      toast.error("Wrong password");
-      setTimeout(() => setShake(false), 500);
+    const parsed = credSchema.safeParse({ email, password });
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0]?.message ?? "Invalid input");
+      return;
+    }
+    setBusy(true);
+    try {
+      if (mode === "signin") {
+        const { error } = await supabase.auth.signInWithPassword(parsed.data);
+        if (error) throw error;
+        toast.success("Signed in");
+      } else {
+        const { error } = await supabase.auth.signUp({
+          ...parsed.data,
+          options: {
+            emailRedirectTo:
+              typeof window !== "undefined" ? `${window.location.origin}/admin` : undefined,
+          },
+        });
+        if (error) throw error;
+        toast.success("Account created. Check your email to confirm.");
+      }
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setBusy(false);
     }
   };
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4">
-      <form
-        onSubmit={submit}
-        className={`rs-card p-8 w-full max-w-sm space-y-5 ${shake ? "animate-rs-shake" : ""}`}
-      >
+      <form onSubmit={submit} className="rs-card p-8 w-full max-w-sm space-y-5">
         <div className="text-center space-y-2">
           <div className="w-14 h-14 mx-auto rounded-2xl bg-primary/15 flex items-center justify-center">
             <Lock className="text-primary" size={24} />
@@ -56,21 +140,47 @@ function Login({ onSuccess }: { onSuccess: () => void }) {
           <h1 className="font-serif font-bold text-3xl">
             Admin <span style={{ color: "#dc2626" }}>Access</span>
           </h1>
-          <p className="rs-body-sm">Enter password to continue</p>
+          <p className="rs-body-sm">
+            {mode === "signin" ? "Sign in to continue" : "Create an admin account"}
+          </p>
         </div>
         <input
-          type="password"
+          type="email"
           autoFocus
-          className="rs-input text-center"
-          placeholder="••••••••"
-          value={pw}
-          onChange={(e) => setPw(e.target.value)}
+          required
+          autoComplete="email"
+          className="rs-input"
+          placeholder="you@hospital.org"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
-        <button type="submit" className="rs-btn rs-btn-primary w-full">
-          Login
+        <input
+          type="password"
+          required
+          autoComplete={mode === "signin" ? "current-password" : "new-password"}
+          className="rs-input"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button
+          type="submit"
+          disabled={busy}
+          className="rs-btn rs-btn-primary w-full disabled:opacity-60"
+        >
+          {busy ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
+        </button>
+        <button
+          type="button"
+          onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+          className="block w-full font-mono text-[11px] text-muted-foreground hover:text-primary"
+        >
+          {mode === "signin"
+            ? "Need an account? Sign up"
+            : "Already have an account? Sign in"}
         </button>
         <p className="font-mono text-[10px] text-text-muted text-center" style={{ letterSpacing: "1px" }}>
-          DEMO · admin123
+          ADMIN ROLE REQUIRED · GRANTED VIA BACKEND
         </p>
       </form>
     </div>
@@ -134,10 +244,10 @@ function Dashboard() {
           <p className="rs-body">Dashboard for hospitals and blood banks</p>
         </div>
         <button
-          onClick={() => { sessionStorage.removeItem("rs-admin"); location.reload(); }}
-          className="rs-btn rs-btn-secondary !py-2 !px-3"
+          onClick={() => supabase.auth.signOut()}
+          className="rs-btn rs-btn-secondary !py-2 !px-3 flex items-center gap-1.5"
         >
-          Logout
+          <LogOut size={14} /> Logout
         </button>
       </header>
 
@@ -405,5 +515,3 @@ function RequestsTab({ requests, reload }: { requests: Req[]; reload: () => void
     </div>
   );
 }
-
-
