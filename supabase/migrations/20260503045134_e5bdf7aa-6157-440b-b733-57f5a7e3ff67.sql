@@ -1,0 +1,2 @@
+CREATE POLICY "Admins can delete requests" ON public.blood_requests FOR DELETE TO authenticated USING (has_role(auth.uid(), 'admin'::app_role));
+CREATE POLICY "Admins can delete sos" ON public.sos_alerts FOR DELETE TO authenticated USING (has_role(auth.uid(), 'admin'::app_role));
