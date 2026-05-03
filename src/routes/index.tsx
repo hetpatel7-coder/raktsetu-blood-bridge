@@ -204,7 +204,7 @@ function HomePage() {
       {/* Share with someone */}
       <a
         href={`https://wa.me/?text=${encodeURIComponent(
-          `🩸 RaktSetu — Real-time blood donor network for Gujarat.\n\nFind verified donors near you in seconds, or register to save lives.\n\nraktsetu.lovable.app\n\n— Ek Boond, Ek Zindagi`
+          `🩸 RaktSetu — Real-time blood donor network for Gujarat.\n\nFind verified donors near you in seconds, or register to save lives.\n\nhttps://raktsetu-blood-bridge.vercel.app\n\n— Ek Boond, Ek Zindagi`
         )}`}
         target="_blank"
         rel="noopener noreferrer"

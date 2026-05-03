@@ -219,7 +219,7 @@ function RequestsPage() {
                 </div>
                 <a
                   href={`https://wa.me/?text=${encodeURIComponent(
-                    `🚨 URGENT BLOOD NEEDED 🚨\n\nBlood Type: ${r.blood_type}\nHospital: ${r.hospital}\nCity: ${r.city ?? "—"}\nUrgency: ${r.urgency}\nContact: ${r.contact_phone}\n\nPlease help or share with someone who can donate. Every minute counts.\n\n— Shared via RaktSetu App\nraktsetu.lovable.app`
+                    `🚨 URGENT BLOOD NEEDED 🚨\n\nBlood Type: ${r.blood_type}\nHospital: ${r.hospital}\nCity: ${r.city ?? "—"}\nUrgency: ${r.urgency}\nContact: ${r.contact_phone}\n\nPlease help or share with someone who can donate. Every minute counts.\n\n— Shared via RaktSetu App\nhttps://raktsetu-blood-bridge.vercel.app`
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -286,7 +286,7 @@ function RequestsPage() {
               </div>
               <a
                 href={`https://wa.me/?text=${encodeURIComponent(
-                  `🚨 SOS BLOOD ALERT 🚨\n\nEMERGENCY: ${s.blood_type} blood needed\nHospital: ${s.hospital}\nCall NOW: ${s.contact_phone}\n\n— RaktSetu Emergency Alert\nraktsetu.lovable.app`
+                  `🚨 SOS BLOOD ALERT 🚨\n\nEMERGENCY: ${s.blood_type} blood needed\nHospital: ${s.hospital}\nCall NOW: ${s.contact_phone}\n\n— RaktSetu Emergency Alert\nhttps://raktsetu-blood-bridge.vercel.app`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"

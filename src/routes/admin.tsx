@@ -196,23 +196,39 @@ type Req = {
   id: string; patient_name: string | null; blood_type: string; hospital: string;
   urgency: string; contact_phone: string; status: string; created_at: string;
 };
+type Sos = {
+  id: string; blood_type: string; hospital: string; contact_phone: string;
+  status: string; created_at: string;
+};
 
 function Dashboard() {
-  const [tab, setTab] = useState<"overview" | "donors" | "requests">("overview");
+  const [tab, setTab] = useState<"overview" | "donors" | "requests" | "sos">("overview");
   const [donors, setDonors] = useState<Donor[]>([]);
   const [requests, setRequests] = useState<Req[]>([]);
+  const [sosList, setSosList] = useState<Sos[]>([]);
   const [sosCount, setSosCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [confirmState, setConfirmState] = useState<{
+    open: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void | Promise<void>;
+  }>({ open: false, title: "", message: "", onConfirm: () => {} });
+
+  const askConfirm = (title: string, message: string, onConfirm: () => void | Promise<void>) =>
+    setConfirmState({ open: true, title, message, onConfirm });
 
   const load = async () => {
     const [d, r, s] = await Promise.all([
       supabase.from("donors").select("*").order("created_at", { ascending: false }),
       supabase.from("blood_requests").select("*").order("created_at", { ascending: false }),
-      supabase.from("sos_alerts").select("id", { count: "exact", head: true }).eq("status", "active"),
+      supabase.from("sos_alerts").select("*").order("created_at", { ascending: false }),
     ]);
     setDonors((d.data as Donor[]) ?? []);
     setRequests((r.data as Req[]) ?? []);
-    setSosCount(s.count ?? 0);
+    const sosArr = (s.data as Sos[]) ?? [];
+    setSosList(sosArr);
+    setSosCount(sosArr.filter((x) => x.status === "active").length);
     setLoading(false);
   };
 
@@ -262,8 +278,8 @@ function Dashboard() {
         ))}
       </section>
 
-      <div className="grid grid-cols-3 gap-2 p-1 bg-card border border-border rounded-2xl">
-        {(["overview", "donors", "requests"] as const).map((t) => (
+      <div className="grid grid-cols-4 gap-2 p-1 bg-card border border-border rounded-2xl">
+        {(["overview", "donors", "requests", "sos"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -282,11 +298,46 @@ function Dashboard() {
         <Overview donors={donors} requests={requests} />
       )}
       {!loading && tab === "donors" && (
-        <DonorsTab donors={donors} reload={load} />
+        <DonorsTab donors={donors} reload={load} askConfirm={askConfirm} />
       )}
       {!loading && tab === "requests" && (
-        <RequestsTab requests={requests} reload={load} />
+        <RequestsTab requests={requests} reload={load} askConfirm={askConfirm} />
       )}
+      {!loading && tab === "sos" && (
+        <SosTab sos={sosList} reload={load} askConfirm={askConfirm} />
+      )}
+
+      <ConfirmDialog
+        open={confirmState.open}
+        title={confirmState.title}
+        message={confirmState.message}
+        onCancel={() => setConfirmState((s) => ({ ...s, open: false }))}
+        onConfirm={async () => {
+          await confirmState.onConfirm();
+          setConfirmState((s) => ({ ...s, open: false }));
+        }}
+      />
+    </div>
+  );
+}
+
+function ConfirmDialog({
+  open, title, message, onConfirm, onCancel,
+}: {
+  open: boolean; title: string; message: string;
+  onConfirm: () => void; onCancel: () => void;
+}) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+      <div className="rs-card p-6 max-w-sm w-full space-y-4">
+        <h3 className="font-serif font-bold text-xl">{title}</h3>
+        <p className="rs-body-sm">{message}</p>
+        <div className="grid grid-cols-2 gap-2">
+          <button onClick={onCancel} className="rs-btn rs-btn-secondary">Cancel</button>
+          <button onClick={onConfirm} className="rs-btn rs-btn-primary">Delete</button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -360,7 +411,9 @@ function Overview({ donors, requests }: { donors: Donor[]; requests: Req[] }) {
   );
 }
 
-function DonorsTab({ donors, reload }: { donors: Donor[]; reload: () => void }) {
+type AskConfirm = (title: string, message: string, onConfirm: () => void | Promise<void>) => void;
+
+function DonorsTab({ donors, reload, askConfirm }: { donors: Donor[]; reload: () => void; askConfirm: AskConfirm }) {
   const [q, setQ] = useState("");
   const filtered = donors.filter(
     (d) =>
@@ -376,11 +429,12 @@ function DonorsTab({ donors, reload }: { donors: Donor[]; reload: () => void }) 
     if (error) toast.error("Update failed");
     else { toast.success("Updated"); reload(); }
   };
-  const remove = async (id: string) => {
-    if (!confirm("Delete this donor?")) return;
-    const { error } = await supabase.from("donors").delete().eq("id", id);
-    if (error) toast.error("Delete failed");
-    else { toast.success("Deleted"); reload(); }
+  const remove = (d: Donor) => {
+    askConfirm("Delete donor?", `Permanently remove ${d.name} from the donor list.`, async () => {
+      const { error } = await supabase.from("donors").delete().eq("id", d.id);
+      if (error) toast.error("Delete failed");
+      else { toast.success("Donor deleted"); reload(); }
+    });
   };
 
   return (
@@ -426,7 +480,7 @@ function DonorsTab({ donors, reload }: { donors: Donor[]; reload: () => void }) 
               {d.available ? "ON" : "OFF"}
             </button>
             <button
-              onClick={() => remove(d.id)}
+              onClick={() => remove(d)}
               className="p-2 text-muted-foreground hover:text-primary transition-colors"
               aria-label="Delete"
             >
@@ -444,7 +498,7 @@ function DonorsTab({ donors, reload }: { donors: Donor[]; reload: () => void }) 
   );
 }
 
-function RequestsTab({ requests, reload }: { requests: Req[]; reload: () => void }) {
+function RequestsTab({ requests, reload, askConfirm }: { requests: Req[]; reload: () => void; askConfirm: AskConfirm }) {
   const [filter, setFilter] = useState<"all" | "active" | "fulfilled">("all");
   const filtered = requests.filter((r) => filter === "all" || r.status === filter);
 
@@ -452,6 +506,13 @@ function RequestsTab({ requests, reload }: { requests: Req[]; reload: () => void
     const { error } = await supabase.from("blood_requests").update({ status: "fulfilled" }).eq("id", id);
     if (error) toast.error("Update failed");
     else { toast.success("Marked fulfilled"); reload(); }
+  };
+  const remove = (r: Req) => {
+    askConfirm("Delete request?", `Permanently delete the request for ${r.hospital}.`, async () => {
+      const { error } = await supabase.from("blood_requests").delete().eq("id", r.id);
+      if (error) toast.error("Delete failed");
+      else { toast.success("Request deleted"); reload(); }
+    });
   };
 
   return (
@@ -504,6 +565,13 @@ function RequestsTab({ requests, reload }: { requests: Req[]; reload: () => void
             ) : (
               <span className="font-mono text-[10px] text-success">DONE</span>
             )}
+            <button
+              onClick={() => remove(r)}
+              className="p-2 text-muted-foreground hover:text-primary transition-colors"
+              aria-label="Delete"
+            >
+              <Trash2 size={14} />
+            </button>
           </div>
         ))}
         {filtered.length === 0 && (
@@ -512,6 +580,69 @@ function RequestsTab({ requests, reload }: { requests: Req[]; reload: () => void
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function SosTab({ sos, reload, askConfirm }: { sos: Sos[]; reload: () => void; askConfirm: AskConfirm }) {
+  const resolve = async (id: string) => {
+    const { error } = await supabase.from("sos_alerts").update({ status: "resolved" }).eq("id", id);
+    if (error) toast.error("Update failed");
+    else { toast.success("SOS resolved"); reload(); }
+  };
+  const remove = (s: Sos) => {
+    askConfirm("Delete SOS alert?", `Permanently delete the SOS for ${s.hospital}.`, async () => {
+      const { error } = await supabase.from("sos_alerts").delete().eq("id", s.id);
+      if (error) toast.error("Delete failed");
+      else { toast.success("SOS deleted"); reload(); }
+    });
+  };
+
+  return (
+    <div className="rs-card overflow-hidden">
+      {sos.map((s, i) => (
+        <div
+          key={s.id}
+          className={`flex items-center gap-3 p-3 ${
+            i < sos.length - 1 ? "border-b border-border" : ""
+          }`}
+        >
+          <div className="w-10 h-10 rounded-full bg-primary/15 border border-primary flex items-center justify-center font-mono font-bold text-primary text-xs shrink-0">
+            {s.blood_type}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="font-serif font-bold truncate">{s.hospital}</div>
+            <div className="font-mono text-[11px] text-muted-foreground truncate">
+              {s.contact_phone} • {formatDistanceToNowStrict(new Date(s.created_at), { addSuffix: true })}
+            </div>
+          </div>
+          <span className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-bold ${
+            s.status === "active" ? "bg-primary text-primary-foreground" : "bg-success/20 text-success"
+          }`}>
+            {s.status.toUpperCase()}
+          </span>
+          {s.status === "active" && (
+            <button
+              onClick={() => resolve(s.id)}
+              className="rs-btn rs-btn-secondary !py-1.5 !px-2 text-[10px]"
+            >
+              RESOLVE
+            </button>
+          )}
+          <button
+            onClick={() => remove(s)}
+            className="p-2 text-muted-foreground hover:text-primary transition-colors"
+            aria-label="Delete"
+          >
+            <Trash2 size={14} />
+          </button>
+        </div>
+      ))}
+      {sos.length === 0 && (
+        <div className="p-8 text-center font-mono text-sm text-muted-foreground">
+          No SOS alerts.
+        </div>
+      )}
     </div>
   );
 }
