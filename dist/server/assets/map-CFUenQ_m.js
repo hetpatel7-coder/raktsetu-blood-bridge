@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 function MapPage() {
   const [Comp, setComp] = useState(null);
   useEffect(() => {
-    import("./DonorMap-ooGJyXzk.js").then((m) => setComp(() => m.DonorMap));
+    import("./DonorMap-DFAQJjxT.js").then((m) => setComp(() => m.DonorMap));
   }, []);
   return /* @__PURE__ */ jsxs("div", { className: "max-w-6xl mx-auto px-4 sm:px-6 pt-6 space-y-4", children: [
     /* @__PURE__ */ jsxs("header", { className: "space-y-2", children: [

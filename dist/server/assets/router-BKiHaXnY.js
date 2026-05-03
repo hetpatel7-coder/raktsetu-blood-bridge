@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Home, Search, HeartHandshake, Trophy, ListChecks, Map, Flame, Settings, Droplet, Siren, X, Loader2 } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
-const appCss = "/assets/styles-DC0M9V5Z.css";
+const appCss = "/assets/styles-BVGDEVs1.css";
 const ITEMS = [
   { to: "/", label: "Home", icon: Home },
   { to: "/find", label: "Find", icon: Search },
@@ -348,7 +348,7 @@ function RootComponent() {
     )
   ] });
 }
-const $$splitComponentImporter$7 = () => import("./requests-DSHS2eFW.js");
+const $$splitComponentImporter$7 = () => import("./requests-CIaJWNn9.js");
 const Route$7 = createFileRoute("/requests")({
   head: () => ({
     meta: [{
@@ -366,7 +366,7 @@ const Route$7 = createFileRoute("/requests")({
   }),
   component: lazyRouteComponent($$splitComponentImporter$7, "component")
 });
-const $$splitComponentImporter$6 = () => import("./register-BTHnUrfZ.js");
+const $$splitComponentImporter$6 = () => import("./register-BI-Nfc2p.js");
 const Route$6 = createFileRoute("/register")({
   head: () => ({
     meta: [{
@@ -384,7 +384,7 @@ const Route$6 = createFileRoute("/register")({
   }),
   component: lazyRouteComponent($$splitComponentImporter$6, "component")
 });
-const $$splitComponentImporter$5 = () => import("./map-GXnqsNY6.js");
+const $$splitComponentImporter$5 = () => import("./map-CFUenQ_m.js");
 const Route$5 = createFileRoute("/map")({
   head: () => ({
     meta: [{
@@ -402,7 +402,7 @@ const Route$5 = createFileRoute("/map")({
   }),
   component: lazyRouteComponent($$splitComponentImporter$5, "component")
 });
-const $$splitComponentImporter$4 = () => import("./leaderboard-QyCGruj3.js");
+const $$splitComponentImporter$4 = () => import("./leaderboard-BKWM8xpd.js");
 const Route$4 = createFileRoute("/leaderboard")({
   head: () => ({
     meta: [{
@@ -420,7 +420,7 @@ const Route$4 = createFileRoute("/leaderboard")({
   }),
   component: lazyRouteComponent($$splitComponentImporter$4, "component")
 });
-const $$splitComponentImporter$3 = () => import("./heatmap-DpZQfuvg.js");
+const $$splitComponentImporter$3 = () => import("./heatmap-B4ixYTxg.js");
 const Route$3 = createFileRoute("/heatmap")({
   head: () => ({
     meta: [{
@@ -438,7 +438,7 @@ const Route$3 = createFileRoute("/heatmap")({
   }),
   component: lazyRouteComponent($$splitComponentImporter$3, "component")
 });
-const $$splitComponentImporter$2 = () => import("./find-CltWHM1M.js");
+const $$splitComponentImporter$2 = () => import("./find-DnhO4nW5.js");
 const Route$2 = createFileRoute("/find")({
   head: () => ({
     meta: [{
@@ -456,7 +456,7 @@ const Route$2 = createFileRoute("/find")({
   }),
   component: lazyRouteComponent($$splitComponentImporter$2, "component")
 });
-const $$splitComponentImporter$1 = () => import("./admin-DKvTyDhd.js");
+const $$splitComponentImporter$1 = () => import("./admin-f0bxJC7Q.js");
 const Route$1 = createFileRoute("/admin")({
   head: () => ({
     meta: [{
@@ -468,7 +468,7 @@ const Route$1 = createFileRoute("/admin")({
   }),
   component: lazyRouteComponent($$splitComponentImporter$1, "component")
 });
-const $$splitComponentImporter = () => import("./index-BGgfw20l.js");
+const $$splitComponentImporter = () => import("./index-DDvq4e04.js");
 const Route = createFileRoute("/")({
   head: () => ({
     meta: [{

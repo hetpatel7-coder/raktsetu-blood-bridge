@@ -1,7 +1,7 @@
 import { jsxs, jsx } from "react/jsx-runtime";
 import { Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { s as supabase, S as SosModal } from "./router-Bog5Uvn9.js";
+import { s as supabase, S as SosModal } from "./router-BKiHaXnY.js";
 import { Siren, Search, HeartHandshake, ListChecks, Settings } from "lucide-react";
 import "react-hot-toast";
 import "@supabase/supabase-js";

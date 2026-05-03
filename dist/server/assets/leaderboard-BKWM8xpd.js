@@ -2,7 +2,7 @@ import { jsxs, jsx, Fragment } from "react/jsx-runtime";
 import { Link } from "@tanstack/react-router";
 import { useState, useEffect, useMemo } from "react";
 import { Trophy, CheckCircle2 } from "lucide-react";
-import { s as supabase } from "./router-Bog5Uvn9.js";
+import { s as supabase } from "./router-BKiHaXnY.js";
 import "react-hot-toast";
 import "@supabase/supabase-js";
 const MEDAL = {

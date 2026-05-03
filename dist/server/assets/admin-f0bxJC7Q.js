@@ -2,37 +2,108 @@ import { jsx, jsxs } from "react/jsx-runtime";
 import { useState, useEffect } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import toast from "react-hot-toast";
-import { s as supabase, b as BLOOD_TYPES, c as CITIES } from "./router-Bog5Uvn9.js";
-import { Lock, Search, Trash2 } from "lucide-react";
+import { z } from "zod";
+import { s as supabase, b as BLOOD_TYPES, c as CITIES } from "./router-BKiHaXnY.js";
+import { Lock, LogOut, Search, Trash2 } from "lucide-react";
 import "@tanstack/react-router";
 import "@supabase/supabase-js";
 function AdminPage() {
-  const [authed, setAuthed] = useState(false);
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setAuthed(sessionStorage.getItem("rs-admin") === "1");
+  const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const checkAdmin = async (uid) => {
+    if (!uid) {
+      setIsAdmin(false);
+      return;
     }
+    const {
+      data,
+      error
+    } = await supabase.from("user_roles").select("role").eq("user_id", uid).eq("role", "admin").maybeSingle();
+    setIsAdmin(!error && !!data);
+  };
+  useEffect(() => {
+    const {
+      data: sub
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      const uid = session?.user?.id ?? null;
+      setUserId(uid);
+      setTimeout(() => {
+        void checkAdmin(uid).finally(() => setLoading(false));
+      }, 0);
+    });
+    supabase.auth.getSession().then(({
+      data: {
+        session
+      }
+    }) => {
+      const uid = session?.user?.id ?? null;
+      setUserId(uid);
+      void checkAdmin(uid).finally(() => setLoading(false));
+    });
+    return () => sub.subscription.unsubscribe();
   }, []);
-  if (!authed) return /* @__PURE__ */ jsx(Login, { onSuccess: () => setAuthed(true) });
+  if (loading) {
+    return /* @__PURE__ */ jsx("div", { className: "min-h-[60vh] flex items-center justify-center", children: /* @__PURE__ */ jsx("div", { className: "rs-skeleton h-12 w-48 rounded-xl" }) });
+  }
+  if (!userId) return /* @__PURE__ */ jsx(AuthForm, {});
+  if (!isAdmin) return /* @__PURE__ */ jsx(NotAuthorized, {});
   return /* @__PURE__ */ jsx(Dashboard, {});
 }
-function Login({
-  onSuccess
-}) {
-  const [pw, setPw] = useState("");
-  const [shake, setShake] = useState(false);
-  const submit = (e) => {
+function NotAuthorized() {
+  return /* @__PURE__ */ jsx("div", { className: "min-h-[60vh] flex items-center justify-center px-4", children: /* @__PURE__ */ jsxs("div", { className: "rs-card p-8 max-w-sm text-center space-y-4", children: [
+    /* @__PURE__ */ jsx("div", { className: "w-14 h-14 mx-auto rounded-2xl bg-primary/15 flex items-center justify-center", children: /* @__PURE__ */ jsx(Lock, { className: "text-primary", size: 24 }) }),
+    /* @__PURE__ */ jsx("h1", { className: "font-serif font-bold text-2xl", children: "Not Authorized" }),
+    /* @__PURE__ */ jsx("p", { className: "rs-body-sm", children: "Your account does not have admin access." }),
+    /* @__PURE__ */ jsx("button", { onClick: () => supabase.auth.signOut(), className: "rs-btn rs-btn-secondary w-full", children: "Sign out" })
+  ] }) });
+}
+const credSchema = z.object({
+  email: z.string().trim().email("Invalid email").max(255),
+  password: z.string().min(6, "At least 6 characters").max(72)
+});
+function AuthForm() {
+  const [mode, setMode] = useState("signin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const submit = async (e) => {
     e.preventDefault();
-    if (pw === "admin123") {
-      sessionStorage.setItem("rs-admin", "1");
-      onSuccess();
-    } else {
-      setShake(true);
-      toast.error("Wrong password");
-      setTimeout(() => setShake(false), 500);
+    const parsed = credSchema.safeParse({
+      email,
+      password
+    });
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0]?.message ?? "Invalid input");
+      return;
+    }
+    setBusy(true);
+    try {
+      if (mode === "signin") {
+        const {
+          error
+        } = await supabase.auth.signInWithPassword(parsed.data);
+        if (error) throw error;
+        toast.success("Signed in");
+      } else {
+        const {
+          error
+        } = await supabase.auth.signUp({
+          ...parsed.data,
+          options: {
+            emailRedirectTo: typeof window !== "undefined" ? `${window.location.origin}/admin` : void 0
+          }
+        });
+        if (error) throw error;
+        toast.success("Account created. Check your email to confirm.");
+      }
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setBusy(false);
     }
   };
-  return /* @__PURE__ */ jsx("div", { className: "min-h-[80vh] flex items-center justify-center px-4", children: /* @__PURE__ */ jsxs("form", { onSubmit: submit, className: `rs-card p-8 w-full max-w-sm space-y-5 ${shake ? "animate-rs-shake" : ""}`, children: [
+  return /* @__PURE__ */ jsx("div", { className: "min-h-[80vh] flex items-center justify-center px-4", children: /* @__PURE__ */ jsxs("form", { onSubmit: submit, className: "rs-card p-8 w-full max-w-sm space-y-5", children: [
     /* @__PURE__ */ jsxs("div", { className: "text-center space-y-2", children: [
       /* @__PURE__ */ jsx("div", { className: "w-14 h-14 mx-auto rounded-2xl bg-primary/15 flex items-center justify-center", children: /* @__PURE__ */ jsx(Lock, { className: "text-primary", size: 24 }) }),
       /* @__PURE__ */ jsxs("h1", { className: "font-serif font-bold text-3xl", children: [
@@ -41,13 +112,15 @@ function Login({
           color: "#dc2626"
         }, children: "Access" })
       ] }),
-      /* @__PURE__ */ jsx("p", { className: "rs-body-sm", children: "Enter password to continue" })
+      /* @__PURE__ */ jsx("p", { className: "rs-body-sm", children: mode === "signin" ? "Sign in to continue" : "Create an admin account" })
     ] }),
-    /* @__PURE__ */ jsx("input", { type: "password", autoFocus: true, className: "rs-input text-center", placeholder: "••••••••", value: pw, onChange: (e) => setPw(e.target.value) }),
-    /* @__PURE__ */ jsx("button", { type: "submit", className: "rs-btn rs-btn-primary w-full", children: "Login" }),
+    /* @__PURE__ */ jsx("input", { type: "email", autoFocus: true, required: true, autoComplete: "email", className: "rs-input", placeholder: "you@hospital.org", value: email, onChange: (e) => setEmail(e.target.value) }),
+    /* @__PURE__ */ jsx("input", { type: "password", required: true, autoComplete: mode === "signin" ? "current-password" : "new-password", className: "rs-input", placeholder: "Password", value: password, onChange: (e) => setPassword(e.target.value) }),
+    /* @__PURE__ */ jsx("button", { type: "submit", disabled: busy, className: "rs-btn rs-btn-primary w-full disabled:opacity-60", children: busy ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account" }),
+    /* @__PURE__ */ jsx("button", { type: "button", onClick: () => setMode(mode === "signin" ? "signup" : "signin"), className: "block w-full font-mono text-[11px] text-muted-foreground hover:text-primary", children: mode === "signin" ? "Need an account? Sign up" : "Already have an account? Sign in" }),
     /* @__PURE__ */ jsx("p", { className: "font-mono text-[10px] text-text-muted text-center", style: {
       letterSpacing: "1px"
-    }, children: "DEMO · admin123" })
+    }, children: "ADMIN ROLE REQUIRED · GRANTED VIA BACKEND" })
   ] }) });
 }
 function Dashboard() {
@@ -109,10 +182,10 @@ function Dashboard() {
         ] }),
         /* @__PURE__ */ jsx("p", { className: "rs-body", children: "Dashboard for hospitals and blood banks" })
       ] }),
-      /* @__PURE__ */ jsx("button", { onClick: () => {
-        sessionStorage.removeItem("rs-admin");
-        location.reload();
-      }, className: "rs-btn rs-btn-secondary !py-2 !px-3", children: "Logout" })
+      /* @__PURE__ */ jsxs("button", { onClick: () => supabase.auth.signOut(), className: "rs-btn rs-btn-secondary !py-2 !px-3 flex items-center gap-1.5", children: [
+        /* @__PURE__ */ jsx(LogOut, { size: 14 }),
+        " Logout"
+      ] })
     ] }),
     /* @__PURE__ */ jsx("section", { className: "grid grid-cols-2 sm:grid-cols-3 gap-3", children: stats.map((s) => /* @__PURE__ */ jsxs("div", { className: "rs-card p-4", children: [
       /* @__PURE__ */ jsx("div", { className: "font-mono font-bold text-2xl text-primary", children: s.v }),
