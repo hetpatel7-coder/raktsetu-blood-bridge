@@ -1,5 +1,5 @@
 import { jsx } from "react/jsx-runtime";
-import { c as CITIES } from "./router-BKiHaXnY.js";
+import { c as CITIES } from "./router-D_2it_03.js";
 function CitySelector({
   value,
   onChange

@@ -2,8 +2,8 @@ import { jsxs, jsx } from "react/jsx-runtime";
 import { useState, useEffect } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import toast from "react-hot-toast";
-import { s as supabase, B as BottomSheet, a as BloodTypeSelector } from "./router-BKiHaXnY.js";
-import { C as CitySelector } from "./CitySelector-BrVCJ73t.js";
+import { s as supabase, B as BottomSheet, a as BloodTypeSelector } from "./router-D_2it_03.js";
+import { C as CitySelector } from "./CitySelector-BK8KvQct.js";
 import { Plus, Phone, CheckCircle, Siren, Loader2 } from "lucide-react";
 import "@tanstack/react-router";
 import "@supabase/supabase-js";
@@ -138,7 +138,7 @@ Contact: ${r.contact_phone}
 Please help or share with someone who can donate. Every minute counts.
 
 — Shared via RaktSetu App
-raktsetu.lovable.app`)}`, target: "_blank", rel: "noopener noreferrer", className: "mt-2 w-full inline-flex items-center justify-center gap-2 rounded-[10px] py-2.5 font-mono uppercase active:scale-95 transition-transform", style: {
+https://raktsetu-blood-bridge.vercel.app`)}`, target: "_blank", rel: "noopener noreferrer", className: "mt-2 w-full inline-flex items-center justify-center gap-2 rounded-[10px] py-2.5 font-mono uppercase active:scale-95 transition-transform", style: {
             background: "rgba(37,211,102,0.1)",
             border: "1px solid rgba(37,211,102,0.3)",
             color: "#25d366",
@@ -187,7 +187,7 @@ Hospital: ${s.hospital}
 Call NOW: ${s.contact_phone}
 
 — RaktSetu Emergency Alert
-raktsetu.lovable.app`)}`, target: "_blank", rel: "noopener noreferrer", className: "mt-2 w-full inline-flex items-center justify-center gap-2 rounded-[10px] py-2.5 font-mono uppercase active:scale-95 transition-transform", style: {
+https://raktsetu-blood-bridge.vercel.app`)}`, target: "_blank", rel: "noopener noreferrer", className: "mt-2 w-full inline-flex items-center justify-center gap-2 rounded-[10px] py-2.5 font-mono uppercase active:scale-95 transition-transform", style: {
           background: "rgba(37,211,102,0.1)",
           border: "1px solid rgba(37,211,102,0.3)",
           color: "#25d366",

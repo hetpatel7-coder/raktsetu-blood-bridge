@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Flame, RefreshCw, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
-import { b as BLOOD_TYPES, s as supabase } from "./router-BKiHaXnY.js";
+import { b as BLOOD_TYPES, s as supabase } from "./router-D_2it_03.js";
 import "react-hot-toast";
 import "@supabase/supabase-js";
 const CITIES = ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Gandhinagar"];

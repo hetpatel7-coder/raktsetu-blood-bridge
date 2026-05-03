@@ -1,7 +1,7 @@
 import { jsxs, jsx } from "react/jsx-runtime";
 import { Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { s as supabase, S as SosModal } from "./router-BKiHaXnY.js";
+import { s as supabase, S as SosModal } from "./router-D_2it_03.js";
 import { Siren, Search, HeartHandshake, ListChecks, Settings } from "lucide-react";
 import "react-hot-toast";
 import "@supabase/supabase-js";
@@ -139,7 +139,7 @@ function HomePage() {
 
 Find verified donors near you in seconds, or register to save lives.
 
-raktsetu.lovable.app
+https://raktsetu-blood-bridge.vercel.app
 
 — Ek Boond, Ek Zindagi`)}`, target: "_blank", rel: "noopener noreferrer", className: "-mt-6 mx-auto inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-mono uppercase active:scale-95 transition-transform", style: {
       background: "rgba(37,211,102,0.08)",
