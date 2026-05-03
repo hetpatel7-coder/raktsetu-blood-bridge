@@ -196,6 +196,10 @@ type Req = {
   id: string; patient_name: string | null; blood_type: string; hospital: string;
   urgency: string; contact_phone: string; status: string; created_at: string;
 };
+type Sos = {
+  id: string; blood_type: string; hospital: string; contact_phone: string;
+  status: string; created_at: string;
+};
 
 function Dashboard() {
   const [tab, setTab] = useState<"overview" | "donors" | "requests">("overview");
