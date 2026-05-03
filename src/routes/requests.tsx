@@ -286,7 +286,7 @@ function RequestsPage() {
               </div>
               <a
                 href={`https://wa.me/?text=${encodeURIComponent(
-                  `🚨 SOS BLOOD ALERT 🚨\n\nEMERGENCY: ${s.blood_type} blood needed\nHospital: ${s.hospital}\nCall NOW: ${s.contact_phone}\n\n— RaktSetu Emergency Alert\nraktsetu.lovable.app`
+                  `🚨 SOS BLOOD ALERT 🚨\n\nEMERGENCY: ${s.blood_type} blood needed\nHospital: ${s.hospital}\nCall NOW: ${s.contact_phone}\n\n— RaktSetu Emergency Alert\nhttps://raktsetu-blood-bridge.vercel.app`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
