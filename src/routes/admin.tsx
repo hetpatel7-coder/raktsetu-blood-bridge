@@ -2,10 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
 import toast from "react-hot-toast";
-import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { BLOOD_TYPES, CITIES } from "@/lib/blood";
 import { Lock, Trash2, Search, LogOut } from "lucide-react";
+
+const ADMIN_PASSWORD = "admin123";
+const ADMIN_KEY = "raktsetu_admin_ok";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
