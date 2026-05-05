@@ -159,7 +159,7 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
           <p className="rs-body">Dashboard for hospitals and blood banks</p>
         </div>
         <button
-          onClick={() => supabase.auth.signOut()}
+          onClick={onLogout}
           className="rs-btn rs-btn-secondary !py-2 !px-3 flex items-center gap-1.5"
         >
           <LogOut size={14} /> Logout
