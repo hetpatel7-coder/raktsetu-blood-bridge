@@ -1,11 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { BloodTypeSelector } from "@/components/BloodTypeSelector";
 import { CitySelector } from "@/components/CitySelector";
 import { COMPATIBILITY, type BloodType } from "@/lib/blood";
-import { CheckCircle2, Loader2, Phone, MessageCircle, HeartPulse, Frown } from "lucide-react";
+import { CheckCircle2, Loader2, Phone, MessageCircle, HeartPulse, Frown, Lock } from "lucide-react";
 
 export const Route = createFileRoute("/find")({
   head: () => ({
