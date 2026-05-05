@@ -31,6 +31,8 @@ type Donor = {
 };
 
 function FindPage() {
+  const [authChecked, setAuthChecked] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
   const [bloodType, setBloodType] = useState<BloodType | null>(null);
   const [city, setCity] = useState<string | null>(null);
   const [urgency, setUrgency] = useState<"normal" | "urgent" | "critical">("normal");
@@ -38,6 +40,17 @@ function FindPage() {
   const [searched, setSearched] = useState(false);
   const [donors, setDonors] = useState<Donor[]>([]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSignedIn(!!session);
+      setAuthChecked(true);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      setSignedIn(!!session);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
 
   const search = async () => {
     if (!bloodType) return;
