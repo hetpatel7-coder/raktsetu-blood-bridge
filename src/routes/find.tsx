@@ -83,6 +83,33 @@ function FindPage() {
 
   const available = donors.filter((d) => d.available).length;
 
+  if (!authChecked) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <Loader2 className="animate-spin text-primary" size={28} />
+      </div>
+    );
+  }
+
+  if (!signedIn) {
+    return (
+      <div className="max-w-md mx-auto px-4 sm:px-6 pt-10">
+        <div className="rs-card p-8 text-center space-y-4">
+          <div className="w-14 h-14 mx-auto rounded-2xl bg-primary/15 flex items-center justify-center">
+            <Lock className="text-primary" size={24} />
+          </div>
+          <h1 className="font-serif font-bold text-2xl">Sign in required</h1>
+          <p className="rs-body-sm">
+            To protect donor privacy, contact details are only visible to signed-in users.
+          </p>
+          <Link to="/admin" className="rs-btn rs-btn-primary w-full">
+            Sign in
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
       <header className="space-y-2">
