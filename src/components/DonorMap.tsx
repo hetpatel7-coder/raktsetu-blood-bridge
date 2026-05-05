@@ -48,7 +48,9 @@ export function DonorMap() {
   // Load donors
   useEffect(() => {
     (async () => {
-      const { data } = await supabase.from("donors").select("*");
+      const { data } = await supabase
+        .from("donors_public")
+        .select("id, name, blood_type, city, available, lat, lng");
       setDonors(data ?? []);
       setLoading(false);
     })();
