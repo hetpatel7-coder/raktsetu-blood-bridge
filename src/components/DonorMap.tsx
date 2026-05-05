@@ -8,7 +8,6 @@ type Donor = {
   id: string;
   name: string;
   blood_type: string;
-  phone: string;
   city: string;
   available: boolean;
   lat: number | null;
