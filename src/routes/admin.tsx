@@ -100,7 +100,7 @@ type Sos = {
   status: string; created_at: string;
 };
 
-function Dashboard() {
+function Dashboard({ onLogout }: { onLogout: () => void }) {
   const [tab, setTab] = useState<"overview" | "donors" | "requests" | "sos">("overview");
   const [donors, setDonors] = useState<Donor[]>([]);
   const [requests, setRequests] = useState<Req[]>([]);
