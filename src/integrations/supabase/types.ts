@@ -142,45 +142,7 @@ export type Database = {
       }
     }
     Views: {
-      donors_public: {
-        Row: {
-          available: boolean | null
-          blood_type: string | null
-          city: string | null
-          created_at: string | null
-          donations_count: number | null
-          id: string | null
-          lat: number | null
-          lng: number | null
-          name: string | null
-          verified: boolean | null
-        }
-        Insert: {
-          available?: boolean | null
-          blood_type?: string | null
-          city?: string | null
-          created_at?: string | null
-          donations_count?: number | null
-          id?: string | null
-          lat?: number | null
-          lng?: number | null
-          name?: string | null
-          verified?: boolean | null
-        }
-        Update: {
-          available?: boolean | null
-          blood_type?: string | null
-          city?: string | null
-          created_at?: string | null
-          donations_count?: number | null
-          id?: string | null
-          lat?: number | null
-          lng?: number | null
-          name?: string | null
-          verified?: boolean | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       has_role: {

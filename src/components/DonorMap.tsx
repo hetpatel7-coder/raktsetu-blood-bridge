@@ -8,6 +8,7 @@ type Donor = {
   id: string;
   name: string;
   blood_type: string;
+  phone: string;
   city: string;
   available: boolean;
   lat: number | null;
@@ -48,10 +49,8 @@ export function DonorMap() {
   // Load donors
   useEffect(() => {
     (async () => {
-      const { data } = await supabase
-        .from("donors_public")
-        .select("id, name, blood_type, city, available, lat, lng");
-      setDonors((data ?? []) as unknown as Donor[]);
+      const { data } = await supabase.from("donors").select("*");
+      setDonors(data ?? []);
       setLoading(false);
     })();
   }, []);
@@ -96,9 +95,12 @@ export function DonorMap() {
             <div style="font-family:'Courier New',monospace;font-size:11px;color:#888;margin-top:2px;">
               ${d.blood_type} • ${d.city} • ${d.available ? "Available" : "Busy"}
             </div>
-            <div style="font-family:'Courier New',monospace;font-size:10px;color:#888;margin-top:6px;">
-              Sign in to view contact
-            </div>
+            <a href="tel:${d.phone}" style="
+              display:inline-block;margin-top:8px;padding:6px 12px;
+              background:#dc2626;color:white;border-radius:8px;text-decoration:none;
+              font-family:'Courier New',monospace;font-weight:700;font-size:11px;">
+              📞 CALL
+            </a>
           </div>`
         )
         .addTo(layer);
