@@ -96,12 +96,9 @@ export function DonorMap() {
             <div style="font-family:'Courier New',monospace;font-size:11px;color:#888;margin-top:2px;">
               ${d.blood_type} • ${d.city} • ${d.available ? "Available" : "Busy"}
             </div>
-            <a href="tel:${d.phone}" style="
-              display:inline-block;margin-top:8px;padding:6px 12px;
-              background:#dc2626;color:white;border-radius:8px;text-decoration:none;
-              font-family:'Courier New',monospace;font-weight:700;font-size:11px;">
-              📞 CALL
-            </a>
+            <div style="font-family:'Courier New',monospace;font-size:10px;color:#888;margin-top:6px;">
+              Sign in to view contact
+            </div>
           </div>`
         )
         .addTo(layer);
