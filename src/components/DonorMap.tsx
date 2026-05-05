@@ -51,7 +51,7 @@ export function DonorMap() {
       const { data } = await supabase
         .from("donors_public")
         .select("id, name, blood_type, city, available, lat, lng");
-      setDonors(data ?? []);
+      setDonors((data ?? []) as unknown as Donor[]);
       setLoading(false);
     })();
   }, []);
