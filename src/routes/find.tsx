@@ -4,8 +4,10 @@ import toast from "react-hot-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { BloodTypeSelector } from "@/components/BloodTypeSelector";
 import { CitySelector } from "@/components/CitySelector";
+import { DonorBadge } from "@/components/DonorBadge";
+import { SafetyNoticeModal } from "@/components/SafetyNoticeModal";
 import { COMPATIBILITY, type BloodType } from "@/lib/blood";
-import { CheckCircle2, Loader2, Phone, MessageCircle, HeartPulse, Frown } from "lucide-react";
+import { Loader2, Phone, MessageCircle, HeartPulse, Frown, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/find")({
   head: () => ({
@@ -30,6 +32,8 @@ type Donor = {
   verified: boolean;
 };
 
+type PendingAction = { url: string; label: string } | null;
+
 function FindPage() {
   const [bloodType, setBloodType] = useState<BloodType | null>(null);
   const [city, setCity] = useState<string | null>(null);
@@ -38,6 +42,8 @@ function FindPage() {
   const [searched, setSearched] = useState(false);
   const [donors, setDonors] = useState<Donor[]>([]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [pending, setPending] = useState<PendingAction>(null);
 
   const search = async () => {
     if (!bloodType) return;
@@ -47,7 +53,7 @@ function FindPage() {
     const compatible = COMPATIBILITY[bloodType];
     let q = supabase.from("donors").select("*").in("blood_type", compatible);
     if (city) q = q.eq("city", city);
-    const { data, error } = await q.order("available", { ascending: false }).order("verified", { ascending: false });
+    const { data, error } = await q.order("available", { ascending: false }).order("donations_count", { ascending: false });
     setLoading(false);
     if (error) {
       toast.error("Search failed. Try again.");
@@ -68,7 +74,26 @@ function FindPage() {
     else toast.success(`Request sent to ${donor.name}`);
   };
 
-  const available = donors.filter((d) => d.available).length;
+  const requestContact = (url: string, label: string) => {
+    setPending({ url, label });
+  };
+
+  const confirmContact = () => {
+    if (!pending) return;
+    const { url } = pending;
+    setPending(null);
+    // Open in new tab for WhatsApp; same-tab for tel: so mobile handles it.
+    if (url.startsWith("http")) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    } else {
+      window.location.href = url;
+    }
+  };
+
+  const visibleDonors = verifiedOnly
+    ? donors.filter((d) => d.donations_count > 0)
+    : donors;
+  const available = visibleDonors.filter((d) => d.available).length;
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
