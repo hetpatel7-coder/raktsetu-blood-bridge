@@ -177,13 +177,40 @@ function FindPage() {
 
       {!loading && donors.length > 0 && (
         <div className="space-y-3">
-          <div className="rs-eyebrow px-1">
-            <span className="text-success">● {available} Available</span>
-            <span className="mx-2 text-text-muted">·</span>
-            <span className="text-muted-foreground">{donors.length} Compatible</span>
+          <div className="flex items-center justify-between gap-3 px-1">
+            <div className="rs-eyebrow">
+              <span className="text-success">● {available} Available</span>
+              <span className="mx-2 text-text-muted">·</span>
+              <span className="text-muted-foreground">{visibleDonors.length} Compatible</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setVerifiedOnly((v) => !v)}
+              aria-pressed={verifiedOnly}
+              className="inline-flex items-center gap-1.5 rounded-full font-mono uppercase transition-all active:scale-95"
+              style={{
+                fontSize: 10,
+                letterSpacing: "1px",
+                padding: "5px 10px",
+                background: verifiedOnly ? "rgba(34,197,94,0.15)" : "transparent",
+                border: verifiedOnly
+                  ? "1px solid rgba(34,197,94,0.5)"
+                  : "1px solid #2a2a2a",
+                color: verifiedOnly ? "#22c55e" : "#8a8a80",
+              }}
+            >
+              <ShieldCheck size={11} />
+              Verified Only
+            </button>
           </div>
 
-          {donors.map((d, i) => {
+          {visibleDonors.length === 0 && (
+            <div className="rs-card p-6 text-center rs-body-sm">
+              No hospital-verified donors match. Turn off the filter to see self-declared donors.
+            </div>
+          )}
+
+          {visibleDonors.map((d, i) => {
             const isExpanded = expandedId === d.id;
             return (
               <div
@@ -208,13 +235,11 @@ function FindPage() {
                     {d.blood_type}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-serif font-bold truncate">{d.name}</span>
-                      {d.verified && (
-                        <CheckCircle2 size={14} className="text-success shrink-0" />
-                      )}
+                      <DonorBadge donationsCount={d.donations_count} />
                     </div>
-                    <div className="font-mono text-[11px] text-muted-foreground mt-0.5">
+                    <div className="font-mono text-[11px] text-muted-foreground mt-1">
                       {d.donations_count} donations • {d.city}
                     </div>
                   </div>
@@ -231,20 +256,25 @@ function FindPage() {
 
                 {isExpanded && d.available && (
                   <div className="px-4 pb-4 pt-1 grid grid-cols-3 gap-2 animate-rs-fade-up">
-                    <a
-                      href={`tel:${d.phone}`}
+                    <button
+                      type="button"
+                      onClick={() => requestContact(`tel:${d.phone}`, "call")}
                       className="rs-btn rs-btn-secondary !py-2.5"
                     >
                       <Phone size={14} /> Call
-                    </a>
-                    <a
-                      href={`https://wa.me/${d.phone.replace(/\D/g, "")}`}
-                      target="_blank"
-                      rel="noreferrer"
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        requestContact(
+                          `https://wa.me/${d.phone.replace(/\D/g, "")}`,
+                          "whatsapp",
+                        )
+                      }
                       className="rs-btn rs-btn-secondary !py-2.5"
                     >
                       <MessageCircle size={14} /> WhatsApp
-                    </a>
+                    </button>
                     <button
                       onClick={() => sendRequest(d)}
                       className="rs-btn rs-btn-primary !py-2.5"
@@ -258,6 +288,13 @@ function FindPage() {
           })}
         </div>
       )}
+
+      <SafetyNoticeModal
+        open={pending !== null}
+        onCancel={() => setPending(null)}
+        onProceed={confirmContact}
+      />
     </div>
   );
 }
+
