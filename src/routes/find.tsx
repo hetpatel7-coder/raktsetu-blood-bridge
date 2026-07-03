@@ -4,8 +4,10 @@ import toast from "react-hot-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { BloodTypeSelector } from "@/components/BloodTypeSelector";
 import { CitySelector } from "@/components/CitySelector";
+import { DonorBadge } from "@/components/DonorBadge";
+import { SafetyNoticeModal } from "@/components/SafetyNoticeModal";
 import { COMPATIBILITY, type BloodType } from "@/lib/blood";
-import { CheckCircle2, Loader2, Phone, MessageCircle, HeartPulse, Frown } from "lucide-react";
+import { Loader2, Phone, MessageCircle, HeartPulse, Frown, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/find")({
   head: () => ({
@@ -30,6 +32,8 @@ type Donor = {
   verified: boolean;
 };
 
+type PendingAction = { url: string; label: string } | null;
+
 function FindPage() {
   const [bloodType, setBloodType] = useState<BloodType | null>(null);
   const [city, setCity] = useState<string | null>(null);
@@ -38,6 +42,8 @@ function FindPage() {
   const [searched, setSearched] = useState(false);
   const [donors, setDonors] = useState<Donor[]>([]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [pending, setPending] = useState<PendingAction>(null);
 
   const search = async () => {
     if (!bloodType) return;
@@ -47,7 +53,7 @@ function FindPage() {
     const compatible = COMPATIBILITY[bloodType];
     let q = supabase.from("donors").select("*").in("blood_type", compatible);
     if (city) q = q.eq("city", city);
-    const { data, error } = await q.order("available", { ascending: false }).order("verified", { ascending: false });
+    const { data, error } = await q.order("available", { ascending: false }).order("donations_count", { ascending: false });
     setLoading(false);
     if (error) {
       toast.error("Search failed. Try again.");
@@ -68,7 +74,26 @@ function FindPage() {
     else toast.success(`Request sent to ${donor.name}`);
   };
 
-  const available = donors.filter((d) => d.available).length;
+  const requestContact = (url: string, label: string) => {
+    setPending({ url, label });
+  };
+
+  const confirmContact = () => {
+    if (!pending) return;
+    const { url } = pending;
+    setPending(null);
+    // Open in new tab for WhatsApp; same-tab for tel: so mobile handles it.
+    if (url.startsWith("http")) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    } else {
+      window.location.href = url;
+    }
+  };
+
+  const visibleDonors = verifiedOnly
+    ? donors.filter((d) => d.donations_count > 0)
+    : donors;
+  const available = visibleDonors.filter((d) => d.available).length;
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
@@ -152,13 +177,40 @@ function FindPage() {
 
       {!loading && donors.length > 0 && (
         <div className="space-y-3">
-          <div className="rs-eyebrow px-1">
-            <span className="text-success">● {available} Available</span>
-            <span className="mx-2 text-text-muted">·</span>
-            <span className="text-muted-foreground">{donors.length} Compatible</span>
+          <div className="flex items-center justify-between gap-3 px-1">
+            <div className="rs-eyebrow">
+              <span className="text-success">● {available} Available</span>
+              <span className="mx-2 text-text-muted">·</span>
+              <span className="text-muted-foreground">{visibleDonors.length} Compatible</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setVerifiedOnly((v) => !v)}
+              aria-pressed={verifiedOnly}
+              className="inline-flex items-center gap-1.5 rounded-full font-mono uppercase transition-all active:scale-95"
+              style={{
+                fontSize: 10,
+                letterSpacing: "1px",
+                padding: "5px 10px",
+                background: verifiedOnly ? "rgba(34,197,94,0.15)" : "transparent",
+                border: verifiedOnly
+                  ? "1px solid rgba(34,197,94,0.5)"
+                  : "1px solid #2a2a2a",
+                color: verifiedOnly ? "#22c55e" : "#8a8a80",
+              }}
+            >
+              <ShieldCheck size={11} />
+              Verified Only
+            </button>
           </div>
 
-          {donors.map((d, i) => {
+          {visibleDonors.length === 0 && (
+            <div className="rs-card p-6 text-center rs-body-sm">
+              No hospital-verified donors match. Turn off the filter to see self-declared donors.
+            </div>
+          )}
+
+          {visibleDonors.map((d, i) => {
             const isExpanded = expandedId === d.id;
             return (
               <div
@@ -183,13 +235,11 @@ function FindPage() {
                     {d.blood_type}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-serif font-bold truncate">{d.name}</span>
-                      {d.verified && (
-                        <CheckCircle2 size={14} className="text-success shrink-0" />
-                      )}
+                      <DonorBadge donationsCount={d.donations_count} />
                     </div>
-                    <div className="font-mono text-[11px] text-muted-foreground mt-0.5">
+                    <div className="font-mono text-[11px] text-muted-foreground mt-1">
                       {d.donations_count} donations • {d.city}
                     </div>
                   </div>
@@ -206,20 +256,25 @@ function FindPage() {
 
                 {isExpanded && d.available && (
                   <div className="px-4 pb-4 pt-1 grid grid-cols-3 gap-2 animate-rs-fade-up">
-                    <a
-                      href={`tel:${d.phone}`}
+                    <button
+                      type="button"
+                      onClick={() => requestContact(`tel:${d.phone}`, "call")}
                       className="rs-btn rs-btn-secondary !py-2.5"
                     >
                       <Phone size={14} /> Call
-                    </a>
-                    <a
-                      href={`https://wa.me/${d.phone.replace(/\D/g, "")}`}
-                      target="_blank"
-                      rel="noreferrer"
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        requestContact(
+                          `https://wa.me/${d.phone.replace(/\D/g, "")}`,
+                          "whatsapp",
+                        )
+                      }
                       className="rs-btn rs-btn-secondary !py-2.5"
                     >
                       <MessageCircle size={14} /> WhatsApp
-                    </a>
+                    </button>
                     <button
                       onClick={() => sendRequest(d)}
                       className="rs-btn rs-btn-primary !py-2.5"
@@ -233,6 +288,13 @@ function FindPage() {
           })}
         </div>
       )}
+
+      <SafetyNoticeModal
+        open={pending !== null}
+        onCancel={() => setPending(null)}
+        onProceed={confirmContact}
+      />
     </div>
   );
 }
+

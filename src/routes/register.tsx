@@ -19,17 +19,36 @@ export const Route = createFileRoute("/register")({
   component: RegisterPage,
 });
 
+const DECLARATION_ITEMS = [
+  "No fever or illness in last 7 days",
+  "No antibiotics taken in last 14 days",
+  "Not donated blood in last 56 days",
+  "No HIV, Hepatitis B/C, or TB",
+  "Weight above 50 kg",
+  "Age between 18 and 65 years",
+] as const;
+
 function RegisterPage() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [bloodType, setBloodType] = useState<BloodType | null>(null);
   const [city, setCity] = useState<string | null>(null);
+  const [checks, setChecks] = useState<boolean[]>(() => DECLARATION_ITEMS.map(() => false));
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState<{ name: string; bloodType: string } | null>(null);
+
+  const allChecked = checks.every(Boolean);
+
+  const toggleCheck = (i: number) =>
+    setChecks((prev) => prev.map((v, idx) => (idx === i ? !v : v)));
 
   const submit = async () => {
     if (!name.trim() || !phone.trim() || !bloodType || !city) {
       toast.error("Please fill all fields");
+      return;
+    }
+    if (!allChecked) {
+      toast.error("You must meet all criteria to register as a donor. This ensures patient safety.");
       return;
     }
     setLoading(true);
@@ -39,6 +58,7 @@ function RegisterPage() {
       blood_type: bloodType,
       city,
       available: true,
+      last_declaration_date: new Date().toISOString(),
     });
     setLoading(false);
     if (error) {
@@ -69,12 +89,12 @@ function RegisterPage() {
                 style={{
                   fontSize: 9,
                   letterSpacing: "1.5px",
-                  color: "#3b82f6",
+                  color: "#eab308",
                   textTransform: "uppercase",
                   fontWeight: 500,
                 }}
               >
-                Verified
+                Self Declared
               </div>
             </div>
           </div>
@@ -148,26 +168,72 @@ function RegisterPage() {
         </div>
       </div>
 
-      <div className="rs-card p-5">
-        <div className="font-mono text-xs text-muted-foreground mb-3 uppercase tracking-wider">
-          Eligibility
+      {/* Mandatory Health Declaration */}
+      <div
+        className="rs-card p-5"
+        style={{
+          border: allChecked ? "1px solid rgba(34,197,94,0.35)" : "1px solid rgba(220,38,38,0.35)",
+        }}
+      >
+        <div className="flex items-center gap-2 mb-1">
+          <div className="font-mono text-xs uppercase tracking-wider" style={{ color: "#dc2626" }}>
+            Mandatory Health Declaration
+          </div>
         </div>
-        <ul className="space-y-2.5">
-          {[
-            "Age 18–65 years",
-            "Weight above 45 kg",
-            "No major illness in last 6 months",
-            "Not donated in last 3 months",
-          ].map((t) => (
-            <li key={t} className="flex items-center gap-2.5 text-sm">
-              <Check size={16} className="text-success shrink-0" />
-              <span>{t}</span>
-            </li>
-          ))}
+        <p className="rs-body-sm mb-4" style={{ color: "#8a8a80" }}>
+          All 6 must be true. This protects patients receiving your blood.
+        </p>
+        <ul className="space-y-2">
+          {DECLARATION_ITEMS.map((label, i) => {
+            const isOn = checks[i];
+            return (
+              <li key={label}>
+                <label
+                  className="flex items-start gap-3 cursor-pointer rounded-xl p-2.5 transition-colors"
+                  style={{
+                    background: isOn ? "rgba(34,197,94,0.06)" : "transparent",
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => toggleCheck(i)}
+                    aria-pressed={isOn}
+                    aria-label={label}
+                    className="shrink-0 mt-0.5 w-5 h-5 rounded-md flex items-center justify-center transition-all"
+                    style={{
+                      background: isOn ? "#22c55e" : "transparent",
+                      border: isOn ? "1.5px solid #22c55e" : "1.5px solid #3a3a3a",
+                    }}
+                  >
+                    {isOn && <Check size={13} strokeWidth={3} color="#0a0a0a" />}
+                  </button>
+                  <span
+                    className="text-sm leading-snug select-none"
+                    style={{ color: isOn ? "#f5f5f0" : "#c8c8c0" }}
+                    onClick={() => toggleCheck(i)}
+                  >
+                    {label}
+                  </span>
+                </label>
+              </li>
+            );
+          })}
         </ul>
+        {!allChecked && (
+          <p
+            className="mt-3 font-mono text-[11px]"
+            style={{ color: "#dc2626", letterSpacing: "0.3px" }}
+          >
+            ⚠ You must meet all criteria to register as a donor.
+          </p>
+        )}
       </div>
 
-      <button onClick={submit} disabled={loading} className="rs-btn rs-btn-primary w-full">
+      <button
+        onClick={submit}
+        disabled={loading || !allChecked}
+        className="rs-btn rs-btn-primary w-full"
+      >
         {loading ? <Loader2 className="animate-spin" size={18} /> : <HeartHandshake size={18} />}
         {loading ? "Registering…" : "Register as Donor"}
       </button>
