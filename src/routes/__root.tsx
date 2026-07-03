@@ -6,6 +6,7 @@ import appCss from "../styles.css?url";
 import { MobileNav } from "@/components/MobileNav";
 import { DesktopNav } from "@/components/DesktopNav";
 import { SosModal } from "@/components/SosModal";
+import { DisclaimerFooter } from "@/components/DisclaimerFooter";
 
 function NotFoundComponent() {
   return (
@@ -85,6 +86,7 @@ function RootComponent() {
       <DesktopNav onSos={() => setSosOpen(true)} />
       <main className="min-h-screen pb-24 lg:pb-0">
         <Outlet />
+        <DisclaimerFooter />
       </main>
       <MobileNav />
       <SosModal open={sosOpen} onClose={() => setSosOpen(false)} />
