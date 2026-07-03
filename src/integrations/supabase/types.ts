@@ -58,6 +58,7 @@ export type Database = {
           created_at: string
           donations_count: number
           id: string
+          last_declaration_date: string | null
           lat: number | null
           lng: number | null
           name: string
@@ -71,6 +72,7 @@ export type Database = {
           created_at?: string
           donations_count?: number
           id?: string
+          last_declaration_date?: string | null
           lat?: number | null
           lng?: number | null
           name: string
@@ -84,6 +86,7 @@ export type Database = {
           created_at?: string
           donations_count?: number
           id?: string
+          last_declaration_date?: string | null
           lat?: number | null
           lng?: number | null
           name?: string
