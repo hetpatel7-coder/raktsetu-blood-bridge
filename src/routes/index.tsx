@@ -151,6 +151,7 @@ function HomePage() {
         <h1 className="font-serif font-black text-5xl sm:text-6xl lg:text-7xl leading-[0.95] tracking-tight">
           <span className="text-foreground">Rakt</span>
           <span style={{ color: "#dc2626" }}>Setu</span>
+          <span className="sr-only"> — Gujarat's Blood Bridge</span>
         </h1>
         <p className="rs-tagline-en">
           One Drop, One Life — Gujarat's Blood Bridge

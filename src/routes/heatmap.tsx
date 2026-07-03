@@ -225,7 +225,7 @@ function HeatmapPage() {
 
       {/* Section 1 — City Overview Cards */}
       <section className="space-y-3">
-        <div className="rs-eyebrow">Cities</div>
+        <h2 className="rs-eyebrow">Cities</h2>
         <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0">
           {CITIES.map((c) => {
             const total = cityTotals[c];
@@ -272,7 +272,7 @@ function HeatmapPage() {
 
       {/* Section 2 — Heatmap Table */}
       <section className="space-y-3">
-        <div className="rs-eyebrow">Heatmap</div>
+        <h2 className="rs-eyebrow">Heatmap</h2>
         <div className="rs-card p-4 overflow-x-auto">
           <table className="w-full border-separate" style={{ borderSpacing: 4 }}>
             <thead>
@@ -363,9 +363,9 @@ function HeatmapPage() {
 
       {/* Section 4 — Critical Alerts */}
       <section className="space-y-3">
-        <div className="rs-eyebrow flex items-center gap-2">
+        <h2 className="rs-eyebrow flex items-center gap-2">
           <AlertTriangle size={11} /> Critical Shortages
-        </div>
+        </h2>
         {criticalCells.length === 0 ? (
           <div
             className="rs-card p-6 flex items-center gap-3"
@@ -418,7 +418,7 @@ function HeatmapPage() {
 
       {/* Section 5 — City Detail Breakdown */}
       <section className="space-y-4">
-        <div className="rs-eyebrow">City Breakdown</div>
+        <h2 className="rs-eyebrow">City Breakdown</h2>
         {CITIES.map((c) => {
           const total = cityTotals[c];
           const hasCritical = BLOOD_TYPES.some((b) => counts[c][b] === 0);
