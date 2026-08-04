@@ -592,20 +592,22 @@ function SosTab({
   askConfirm: AskConfirm;
 }) {
   const resolve = async (id: string) => {
-    const { error } = await supabase.from("sos_alerts").update({ status: "resolved" }).eq("id", id);
-    if (error) toast.error("Update failed");
-    else {
+    try {
+      await adminSetStatus({ data: { table: "sos_alerts", id, status: "resolved" } });
       toast.success("SOS resolved");
       reload();
+    } catch {
+      toast.error("Update failed");
     }
   };
   const remove = (s: Sos) => {
     askConfirm("Delete SOS alert?", `Permanently delete the SOS for ${s.hospital}.`, async () => {
-      const { error } = await supabase.from("sos_alerts").delete().eq("id", s.id);
-      if (error) toast.error("Delete failed");
-      else {
+      try {
+        await adminDeleteRow({ data: { table: "sos_alerts", id: s.id } });
         toast.success("SOS deleted");
         reload();
+      } catch {
+        toast.error("Delete failed");
       }
     });
   };
