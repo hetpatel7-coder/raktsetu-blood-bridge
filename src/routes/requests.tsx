@@ -99,18 +99,21 @@ function RequestsPage() {
   }, []);
 
   const markFulfilled = async (id: string) => {
-    const { error } = await supabase
-      .from("blood_requests")
-      .update({ status: "fulfilled" })
-      .eq("id", id);
-    if (error) toast.error("Failed to update");
-    else toast.success("Marked fulfilled");
+    try {
+      await closeBloodRequest({ data: { id } });
+      toast.success("Marked fulfilled");
+    } catch {
+      toast.error("Failed to update");
+    }
   };
 
   const resolveSos = async (id: string) => {
-    const { error } = await supabase.from("sos_alerts").update({ status: "resolved" }).eq("id", id);
-    if (error) toast.error("Failed to update");
-    else toast.success("SOS resolved");
+    try {
+      await closeSosAlert({ data: { id } });
+      toast.success("SOS resolved");
+    } catch {
+      toast.error("Failed to update");
+    }
   };
 
   return (
