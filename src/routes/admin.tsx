@@ -39,7 +39,14 @@ function AdminPage() {
   }
 
   if (!authed) return <PasswordGate onSuccess={() => setAuthed(true)} />;
-  return <Dashboard onLogout={() => { sessionStorage.removeItem(ADMIN_KEY); setAuthed(false); }} />;
+  return (
+    <Dashboard
+      onLogout={() => {
+        sessionStorage.removeItem(ADMIN_KEY);
+        setAuthed(false);
+      }}
+    />
+  );
 }
 
 function PasswordGate({ onSuccess }: { onSuccess: () => void }) {
@@ -87,17 +94,33 @@ function PasswordGate({ onSuccess }: { onSuccess: () => void }) {
 }
 
 type Donor = {
-  id: string; name: string; blood_type: string; phone: string;
-  city: string; available: boolean; verified: boolean; donations_count: number;
+  id: string;
+  name: string;
+  blood_type: string;
+  phone: string;
+  city: string;
+  available: boolean;
+  verified: boolean;
+  donations_count: number;
   created_at: string;
 };
 type Req = {
-  id: string; patient_name: string | null; blood_type: string; hospital: string;
-  urgency: string; contact_phone: string; status: string; created_at: string;
+  id: string;
+  patient_name: string | null;
+  blood_type: string;
+  hospital: string;
+  urgency: string;
+  contact_phone: string;
+  status: string;
+  created_at: string;
 };
 type Sos = {
-  id: string; blood_type: string; hospital: string; contact_phone: string;
-  status: string; created_at: string;
+  id: string;
+  blood_type: string;
+  hospital: string;
+  contact_phone: string;
+  status: string;
+  created_at: string;
 };
 
 function Dashboard({ onLogout }: { onLogout: () => void }) {
@@ -131,7 +154,9 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
     setLoading(false);
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   const totalDonors = donors.length;
   const availableNow = donors.filter((d) => d.available).length;
@@ -193,18 +218,14 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
 
       {loading && <div className="rs-skeleton h-40 rounded-2xl" />}
 
-      {!loading && tab === "overview" && (
-        <Overview donors={donors} requests={requests} />
-      )}
+      {!loading && tab === "overview" && <Overview donors={donors} requests={requests} />}
       {!loading && tab === "donors" && (
         <DonorsTab donors={donors} reload={load} askConfirm={askConfirm} />
       )}
       {!loading && tab === "requests" && (
         <RequestsTab requests={requests} reload={load} askConfirm={askConfirm} />
       )}
-      {!loading && tab === "sos" && (
-        <SosTab sos={sosList} reload={load} askConfirm={askConfirm} />
-      )}
+      {!loading && tab === "sos" && <SosTab sos={sosList} reload={load} askConfirm={askConfirm} />}
 
       <ConfirmDialog
         open={confirmState.open}
@@ -221,10 +242,17 @@ function Dashboard({ onLogout }: { onLogout: () => void }) {
 }
 
 function ConfirmDialog({
-  open, title, message, onConfirm, onCancel,
+  open,
+  title,
+  message,
+  onConfirm,
+  onCancel,
 }: {
-  open: boolean; title: string; message: string;
-  onConfirm: () => void; onCancel: () => void;
+  open: boolean;
+  title: string;
+  message: string;
+  onConfirm: () => void;
+  onCancel: () => void;
 }) {
   if (!open) return null;
   return (
@@ -233,8 +261,12 @@ function ConfirmDialog({
         <h3 className="font-serif font-bold text-xl">{title}</h3>
         <p className="rs-body-sm">{message}</p>
         <div className="grid grid-cols-2 gap-2">
-          <button onClick={onCancel} className="rs-btn rs-btn-secondary">Cancel</button>
-          <button onClick={onConfirm} className="rs-btn rs-btn-primary">Delete</button>
+          <button onClick={onCancel} className="rs-btn rs-btn-secondary">
+            Cancel
+          </button>
+          <button onClick={onConfirm} className="rs-btn rs-btn-primary">
+            Delete
+          </button>
         </div>
       </div>
     </div>
@@ -242,7 +274,10 @@ function ConfirmDialog({
 }
 
 function Overview({ donors, requests }: { donors: Donor[]; requests: Req[] }) {
-  const max = Math.max(1, ...BLOOD_TYPES.map((b) => donors.filter((d) => d.blood_type === b).length));
+  const max = Math.max(
+    1,
+    ...BLOOD_TYPES.map((b) => donors.filter((d) => d.blood_type === b).length),
+  );
   const recent = requests.slice(0, 10);
   return (
     <div className="grid lg:grid-cols-2 gap-4">
@@ -256,7 +291,10 @@ function Overview({ donors, requests }: { donors: Donor[]; requests: Req[] }) {
               <div key={b} className="flex items-center gap-3">
                 <div className="w-10 font-mono text-xs font-bold text-primary">{b}</div>
                 <div className="flex-1 h-6 bg-input rounded-md overflow-hidden">
-                  <div className="h-full bg-primary rounded-md transition-all" style={{ width: `${w}%` }} />
+                  <div
+                    className="h-full bg-primary rounded-md transition-all"
+                    style={{ width: `${w}%` }}
+                  />
                 </div>
                 <div className="w-8 text-right font-mono text-xs">{c}</div>
               </div>
@@ -287,7 +325,10 @@ function Overview({ donors, requests }: { donors: Donor[]; requests: Req[] }) {
         )}
         <div className="space-y-2">
           {recent.map((r) => (
-            <div key={r.id} className="flex items-center gap-3 py-2 border-b border-border last:border-0">
+            <div
+              key={r.id}
+              className="flex items-center gap-3 py-2 border-b border-border last:border-0"
+            >
               <div className="w-10 h-10 rounded-full bg-primary/15 border border-primary flex items-center justify-center font-mono font-bold text-primary text-xs">
                 {r.blood_type}
               </div>
@@ -297,9 +338,13 @@ function Overview({ donors, requests }: { donors: Donor[]; requests: Req[] }) {
                   {formatDistanceToNowStrict(new Date(r.created_at), { addSuffix: true })}
                 </div>
               </div>
-              <span className={`font-mono text-[10px] px-2 py-0.5 rounded-full ${
-                r.status === "fulfilled" ? "bg-success/20 text-success" : "bg-primary/20 text-primary"
-              }`}>
+              <span
+                className={`font-mono text-[10px] px-2 py-0.5 rounded-full ${
+                  r.status === "fulfilled"
+                    ? "bg-success/20 text-success"
+                    : "bg-primary/20 text-primary"
+                }`}
+              >
                 {r.status.toUpperCase()}
               </span>
             </div>
@@ -312,7 +357,15 @@ function Overview({ donors, requests }: { donors: Donor[]; requests: Req[] }) {
 
 type AskConfirm = (title: string, message: string, onConfirm: () => void | Promise<void>) => void;
 
-function DonorsTab({ donors, reload, askConfirm }: { donors: Donor[]; reload: () => void; askConfirm: AskConfirm }) {
+function DonorsTab({
+  donors,
+  reload,
+  askConfirm,
+}: {
+  donors: Donor[];
+  reload: () => void;
+  askConfirm: AskConfirm;
+}) {
   const [q, setQ] = useState("");
   const filtered = donors.filter(
     (d) =>
@@ -320,26 +373,38 @@ function DonorsTab({ donors, reload, askConfirm }: { donors: Donor[]; reload: ()
       d.name.toLowerCase().includes(q.toLowerCase()) ||
       d.phone.includes(q) ||
       d.city.toLowerCase().includes(q.toLowerCase()) ||
-      d.blood_type.toLowerCase() === q.toLowerCase()
+      d.blood_type.toLowerCase() === q.toLowerCase(),
   );
 
   const toggle = async (d: Donor) => {
-    const { error } = await supabase.from("donors").update({ available: !d.available }).eq("id", d.id);
+    const { error } = await supabase
+      .from("donors")
+      .update({ available: !d.available })
+      .eq("id", d.id);
     if (error) toast.error("Update failed");
-    else { toast.success("Updated"); reload(); }
+    else {
+      toast.success("Updated");
+      reload();
+    }
   };
   const remove = (d: Donor) => {
     askConfirm("Delete donor?", `Permanently remove ${d.name} from the donor list.`, async () => {
       const { error } = await supabase.from("donors").delete().eq("id", d.id);
       if (error) toast.error("Delete failed");
-      else { toast.success("Donor deleted"); reload(); }
+      else {
+        toast.success("Donor deleted");
+        reload();
+      }
     });
   };
 
   return (
     <div className="space-y-3">
       <div className="relative">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+        <Search
+          size={16}
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+        />
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
@@ -397,20 +462,37 @@ function DonorsTab({ donors, reload, askConfirm }: { donors: Donor[]; reload: ()
   );
 }
 
-function RequestsTab({ requests, reload, askConfirm }: { requests: Req[]; reload: () => void; askConfirm: AskConfirm }) {
+function RequestsTab({
+  requests,
+  reload,
+  askConfirm,
+}: {
+  requests: Req[];
+  reload: () => void;
+  askConfirm: AskConfirm;
+}) {
   const [filter, setFilter] = useState<"all" | "active" | "fulfilled">("all");
   const filtered = requests.filter((r) => filter === "all" || r.status === filter);
 
   const fulfill = async (id: string) => {
-    const { error } = await supabase.from("blood_requests").update({ status: "fulfilled" }).eq("id", id);
+    const { error } = await supabase
+      .from("blood_requests")
+      .update({ status: "fulfilled" })
+      .eq("id", id);
     if (error) toast.error("Update failed");
-    else { toast.success("Marked fulfilled"); reload(); }
+    else {
+      toast.success("Marked fulfilled");
+      reload();
+    }
   };
   const remove = (r: Req) => {
     askConfirm("Delete request?", `Permanently delete the request for ${r.hospital}.`, async () => {
       const { error } = await supabase.from("blood_requests").delete().eq("id", r.id);
       if (error) toast.error("Delete failed");
-      else { toast.success("Request deleted"); reload(); }
+      else {
+        toast.success("Request deleted");
+        reload();
+      }
     });
   };
 
@@ -445,13 +527,19 @@ function RequestsTab({ requests, reload, askConfirm }: { requests: Req[]; reload
             <div className="flex-1 min-w-0">
               <div className="font-serif font-bold truncate">{r.hospital}</div>
               <div className="font-mono text-[11px] text-muted-foreground truncate">
-                {r.contact_phone} • {formatDistanceToNowStrict(new Date(r.created_at), { addSuffix: true })}
+                {r.contact_phone} •{" "}
+                {formatDistanceToNowStrict(new Date(r.created_at), { addSuffix: true })}
               </div>
             </div>
-            <span className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-bold ${
-              r.urgency === "critical" ? "bg-primary text-primary-foreground" :
-              r.urgency === "urgent" ? "bg-warning/20 text-warning" : "bg-success/20 text-success"
-            }`}>
+            <span
+              className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-bold ${
+                r.urgency === "critical"
+                  ? "bg-primary text-primary-foreground"
+                  : r.urgency === "urgent"
+                    ? "bg-warning/20 text-warning"
+                    : "bg-success/20 text-success"
+              }`}
+            >
               {r.urgency.toUpperCase()}
             </span>
             {r.status === "active" ? (
@@ -483,17 +571,31 @@ function RequestsTab({ requests, reload, askConfirm }: { requests: Req[]; reload
   );
 }
 
-function SosTab({ sos, reload, askConfirm }: { sos: Sos[]; reload: () => void; askConfirm: AskConfirm }) {
+function SosTab({
+  sos,
+  reload,
+  askConfirm,
+}: {
+  sos: Sos[];
+  reload: () => void;
+  askConfirm: AskConfirm;
+}) {
   const resolve = async (id: string) => {
     const { error } = await supabase.from("sos_alerts").update({ status: "resolved" }).eq("id", id);
     if (error) toast.error("Update failed");
-    else { toast.success("SOS resolved"); reload(); }
+    else {
+      toast.success("SOS resolved");
+      reload();
+    }
   };
   const remove = (s: Sos) => {
     askConfirm("Delete SOS alert?", `Permanently delete the SOS for ${s.hospital}.`, async () => {
       const { error } = await supabase.from("sos_alerts").delete().eq("id", s.id);
       if (error) toast.error("Delete failed");
-      else { toast.success("SOS deleted"); reload(); }
+      else {
+        toast.success("SOS deleted");
+        reload();
+      }
     });
   };
 
@@ -512,12 +614,17 @@ function SosTab({ sos, reload, askConfirm }: { sos: Sos[]; reload: () => void; a
           <div className="flex-1 min-w-0">
             <div className="font-serif font-bold truncate">{s.hospital}</div>
             <div className="font-mono text-[11px] text-muted-foreground truncate">
-              {s.contact_phone} • {formatDistanceToNowStrict(new Date(s.created_at), { addSuffix: true })}
+              {s.contact_phone} •{" "}
+              {formatDistanceToNowStrict(new Date(s.created_at), { addSuffix: true })}
             </div>
           </div>
-          <span className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-bold ${
-            s.status === "active" ? "bg-primary text-primary-foreground" : "bg-success/20 text-success"
-          }`}>
+          <span
+            className={`px-2 py-0.5 rounded-full font-mono text-[10px] font-bold ${
+              s.status === "active"
+                ? "bg-primary text-primary-foreground"
+                : "bg-success/20 text-success"
+            }`}
+          >
             {s.status.toUpperCase()}
           </span>
           {s.status === "active" && (

@@ -15,7 +15,10 @@ export const Route = createFileRoute("/find")({
       { title: "Find Donor — RaktSetu" },
       { name: "description", content: "Search compatible blood donors near you across Gujarat." },
       { property: "og:title", content: "Find Donor — RaktSetu" },
-      { property: "og:description", content: "Search compatible blood donors near you in seconds." },
+      {
+        property: "og:description",
+        content: "Search compatible blood donors near you in seconds.",
+      },
     ],
   }),
   component: FindPage,
@@ -53,7 +56,9 @@ function FindPage() {
     const compatible = COMPATIBILITY[bloodType];
     let q = supabase.from("donors").select("*").in("blood_type", compatible);
     if (city) q = q.eq("city", city);
-    const { data, error } = await q.order("available", { ascending: false }).order("donations_count", { ascending: false });
+    const { data, error } = await q
+      .order("available", { ascending: false })
+      .order("donations_count", { ascending: false });
     setLoading(false);
     if (error) {
       toast.error("Search failed. Try again.");
@@ -90,9 +95,7 @@ function FindPage() {
     }
   };
 
-  const visibleDonors = verifiedOnly
-    ? donors.filter((d) => d.donations_count > 0)
-    : donors;
+  const visibleDonors = verifiedOnly ? donors.filter((d) => d.donations_count > 0) : donors;
   const available = visibleDonors.filter((d) => d.available).length;
 
   return (
@@ -169,9 +172,7 @@ function FindPage() {
         <div className="rs-card p-8 text-center space-y-3">
           <Frown size={40} className="mx-auto text-muted-foreground" />
           <div className="font-serif font-bold text-lg">No Donors Found</div>
-          <p className="rs-body-sm">
-            Try Emergency SOS to alert nearby donors instantly.
-          </p>
+          <p className="rs-body-sm">Try Emergency SOS to alert nearby donors instantly.</p>
         </div>
       )}
 
@@ -193,9 +194,7 @@ function FindPage() {
                 letterSpacing: "1px",
                 padding: "5px 10px",
                 background: verifiedOnly ? "rgba(34,197,94,0.15)" : "transparent",
-                border: verifiedOnly
-                  ? "1px solid rgba(34,197,94,0.5)"
-                  : "1px solid #2a2a2a",
+                border: verifiedOnly ? "1px solid rgba(34,197,94,0.5)" : "1px solid #2a2a2a",
                 color: verifiedOnly ? "#22c55e" : "#8a8a80",
               }}
             >
@@ -245,9 +244,7 @@ function FindPage() {
                   </div>
                   <div
                     className={`shrink-0 px-2.5 py-1 rounded-full rs-pill ${
-                      d.available
-                        ? "bg-success/15 text-success"
-                        : "bg-muted text-muted-foreground"
+                      d.available ? "bg-success/15 text-success" : "bg-muted text-muted-foreground"
                     }`}
                   >
                     {d.available ? "● Available" : "○ Busy"}
@@ -266,10 +263,7 @@ function FindPage() {
                     <button
                       type="button"
                       onClick={() =>
-                        requestContact(
-                          `https://wa.me/${d.phone.replace(/\D/g, "")}`,
-                          "whatsapp",
-                        )
+                        requestContact(`https://wa.me/${d.phone.replace(/\D/g, "")}`, "whatsapp")
                       }
                       className="rs-btn rs-btn-secondary !py-2.5"
                     >
@@ -297,4 +291,3 @@ function FindPage() {
     </div>
   );
 }
-

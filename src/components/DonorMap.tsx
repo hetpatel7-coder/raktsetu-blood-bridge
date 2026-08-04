@@ -71,7 +71,7 @@ export function DonorMap() {
       const [lat, lng] =
         d.lat != null && d.lng != null
           ? [d.lat, d.lng]
-          : CITY_COORDS[d.city] ?? [23.0225, 72.5714];
+          : (CITY_COORDS[d.city] ?? [23.0225, 72.5714]);
 
       const color = d.available ? "#dc2626" : "#555";
       const html = `
@@ -101,7 +101,7 @@ export function DonorMap() {
               font-family:'Courier New',monospace;font-weight:700;font-size:11px;">
               📞 CALL
             </a>
-          </div>`
+          </div>`,
         )
         .addTo(layer);
     });
@@ -113,7 +113,7 @@ export function DonorMap() {
       (pos) => {
         mapRef.current!.setView([pos.coords.latitude, pos.coords.longitude], 13);
       },
-      () => {}
+      () => {},
     );
   };
 
@@ -129,7 +129,9 @@ export function DonorMap() {
           >
             <option value="all">All Types</option>
             {BLOOD_TYPES.map((b) => (
-              <option key={b} value={b}>{b}</option>
+              <option key={b} value={b}>
+                {b}
+              </option>
             ))}
           </select>
           <button

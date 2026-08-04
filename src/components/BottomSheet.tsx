@@ -27,10 +27,7 @@ export function BottomSheet({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
-      <div
-        className="absolute inset-0 rs-backdrop animate-rs-fade-up"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 rs-backdrop animate-rs-fade-up" onClick={onClose} />
       <div className="relative w-full sm:max-w-md sm:mx-4 bg-card border border-border rounded-t-3xl sm:rounded-3xl p-6 max-h-[90vh] overflow-y-auto animate-rs-slide-up shadow-2xl">
         <div className="flex items-center justify-between mb-5">
           <h2 className="font-serif font-bold text-xl">{title}</h2>

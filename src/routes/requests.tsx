@@ -13,9 +13,15 @@ export const Route = createFileRoute("/requests")({
   head: () => ({
     meta: [
       { title: "Live Requests — RaktSetu" },
-      { name: "description", content: "Active blood requests and SOS alerts across Gujarat in real-time." },
+      {
+        name: "description",
+        content: "Active blood requests and SOS alerts across Gujarat in real-time.",
+      },
       { property: "og:title", content: "Live Requests — RaktSetu" },
-      { property: "og:description", content: "See live blood requests and SOS alerts in real-time." },
+      {
+        property: "og:description",
+        content: "See live blood requests and SOS alerts in real-time.",
+      },
     ],
   }),
   component: RequestsPage,
@@ -67,7 +73,7 @@ function RequestsPage() {
     const sorted = (r.data ?? []).sort(
       (a, b) =>
         (URGENCY_RANK[a.urgency] ?? 9) - (URGENCY_RANK[b.urgency] ?? 9) ||
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
     );
     setRequests(sorted);
     setSos(s.data ?? []);
@@ -78,22 +84,14 @@ function RequestsPage() {
     load();
     const ch = supabase
       .channel("rs-live")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "blood_requests" },
-        (p) => {
-          load();
-          if (p.eventType === "INSERT") toast.success("🩸 New blood request!");
-        }
-      )
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "sos_alerts" },
-        (p) => {
-          load();
-          if (p.eventType === "INSERT") toast.error("🚨 New SOS alert!");
-        }
-      )
+      .on("postgres_changes", { event: "*", schema: "public", table: "blood_requests" }, (p) => {
+        load();
+        if (p.eventType === "INSERT") toast.success("🩸 New blood request!");
+      })
+      .on("postgres_changes", { event: "*", schema: "public", table: "sos_alerts" }, (p) => {
+        load();
+        if (p.eventType === "INSERT") toast.error("🚨 New SOS alert!");
+      })
       .subscribe();
     return () => {
       supabase.removeChannel(ch);
@@ -170,14 +168,14 @@ function RequestsPage() {
               r.urgency === "critical"
                 ? "border-primary bg-primary/8"
                 : r.urgency === "urgent"
-                ? "border-warning/60 bg-warning/5"
-                : "border-success/40 bg-success/5";
+                  ? "border-warning/60 bg-warning/5"
+                  : "border-success/40 bg-success/5";
             const badge =
               r.urgency === "critical"
                 ? "bg-primary text-primary-foreground"
                 : r.urgency === "urgent"
-                ? "bg-warning/20 text-warning"
-                : "bg-success/20 text-success";
+                  ? "bg-warning/20 text-warning"
+                  : "bg-success/20 text-success";
             return (
               <div
                 key={r.id}
@@ -190,9 +188,7 @@ function RequestsPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-serif font-bold">
-                        {r.patient_name || "Anonymous"}
-                      </span>
+                      <span className="font-serif font-bold">{r.patient_name || "Anonymous"}</span>
                       <span className={`px-2 py-0.5 rounded-full rs-pill ${badge}`}>
                         {r.urgency}
                       </span>
@@ -219,7 +215,7 @@ function RequestsPage() {
                 </div>
                 <a
                   href={`https://wa.me/?text=${encodeURIComponent(
-                    `🚨 URGENT BLOOD NEEDED 🚨\n\nBlood Type: ${r.blood_type}\nHospital: ${r.hospital}\nCity: ${r.city ?? "—"}\nUrgency: ${r.urgency}\nContact: ${r.contact_phone}\n\nPlease help or share with someone who can donate. Every minute counts.\n\n— Shared via RaktSetu App\nhttps://raktsetu-blood-bridge.vercel.app`
+                    `🚨 URGENT BLOOD NEEDED 🚨\n\nBlood Type: ${r.blood_type}\nHospital: ${r.hospital}\nCity: ${r.city ?? "—"}\nUrgency: ${r.urgency}\nContact: ${r.contact_phone}\n\nPlease help or share with someone who can donate. Every minute counts.\n\n— Shared via RaktSetu App\nhttps://raktsetu-blood-bridge.vercel.app`,
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -262,9 +258,7 @@ function RequestsPage() {
                     <Siren size={14} className="text-primary" />
                     <span className="font-serif font-bold">Active Emergency</span>
                   </div>
-                  <div className="rs-body-sm mt-1 truncate">
-                    {s.hospital}
-                  </div>
+                  <div className="rs-body-sm mt-1 truncate">{s.hospital}</div>
                   <div
                     className="font-mono mt-0.5"
                     style={{ fontSize: 10, color: "#555", letterSpacing: "0.5px" }}
@@ -277,16 +271,13 @@ function RequestsPage() {
                 <a href={`tel:${s.contact_phone}`} className="rs-btn rs-btn-sos !py-3">
                   <Phone size={14} /> Call Now
                 </a>
-                <button
-                  onClick={() => resolveSos(s.id)}
-                  className="rs-btn rs-btn-secondary !py-3"
-                >
+                <button onClick={() => resolveSos(s.id)} className="rs-btn rs-btn-secondary !py-3">
                   <CheckCircle size={14} /> Resolve
                 </button>
               </div>
               <a
                 href={`https://wa.me/?text=${encodeURIComponent(
-                  `🚨 SOS BLOOD ALERT 🚨\n\nEMERGENCY: ${s.blood_type} blood needed\nHospital: ${s.hospital}\nCall NOW: ${s.contact_phone}\n\n— RaktSetu Emergency Alert\nhttps://raktsetu-blood-bridge.vercel.app`
+                  `🚨 SOS BLOOD ALERT 🚨\n\nEMERGENCY: ${s.blood_type} blood needed\nHospital: ${s.hospital}\nCall NOW: ${s.contact_phone}\n\n— RaktSetu Emergency Alert\nhttps://raktsetu-blood-bridge.vercel.app`,
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -340,7 +331,12 @@ function PostRequestModal({ open, onClose }: { open: boolean; onClose: () => voi
       return;
     }
     toast.success("Request posted!");
-    setName(""); setBt(null); setHospital(""); setCity(null); setUrgency("normal"); setPhone("");
+    setName("");
+    setBt(null);
+    setHospital("");
+    setCity(null);
+    setUrgency("normal");
+    setPhone("");
     onClose();
   };
 
@@ -351,22 +347,40 @@ function PostRequestModal({ open, onClose }: { open: boolean; onClose: () => voi
           <label className="block font-mono text-xs text-muted-foreground mb-2 uppercase">
             Patient Name (optional)
           </label>
-          <input className="rs-input" value={name} onChange={(e) => setName(e.target.value)} maxLength={80} />
+          <input
+            className="rs-input"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            maxLength={80}
+          />
         </div>
         <div>
-          <label className="block font-mono text-xs text-muted-foreground mb-2 uppercase">Blood Type</label>
+          <label className="block font-mono text-xs text-muted-foreground mb-2 uppercase">
+            Blood Type
+          </label>
           <BloodTypeSelector value={bt} onChange={setBt} />
         </div>
         <div>
-          <label className="block font-mono text-xs text-muted-foreground mb-2 uppercase">Hospital</label>
-          <input className="rs-input" value={hospital} onChange={(e) => setHospital(e.target.value)} maxLength={120} />
+          <label className="block font-mono text-xs text-muted-foreground mb-2 uppercase">
+            Hospital
+          </label>
+          <input
+            className="rs-input"
+            value={hospital}
+            onChange={(e) => setHospital(e.target.value)}
+            maxLength={120}
+          />
         </div>
         <div>
-          <label className="block font-mono text-xs text-muted-foreground mb-2 uppercase">City</label>
+          <label className="block font-mono text-xs text-muted-foreground mb-2 uppercase">
+            City
+          </label>
           <CitySelector value={city} onChange={setCity} />
         </div>
         <div>
-          <label className="block font-mono text-xs text-muted-foreground mb-2 uppercase">Urgency</label>
+          <label className="block font-mono text-xs text-muted-foreground mb-2 uppercase">
+            Urgency
+          </label>
           <div className="grid grid-cols-3 gap-2">
             {[
               { k: "normal", e: "🟢", l: "Normal" },
@@ -389,8 +403,16 @@ function PostRequestModal({ open, onClose }: { open: boolean; onClose: () => voi
           </div>
         </div>
         <div>
-          <label className="block font-mono text-xs text-muted-foreground mb-2 uppercase">Contact Phone</label>
-          <input className="rs-input" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={20} />
+          <label className="block font-mono text-xs text-muted-foreground mb-2 uppercase">
+            Contact Phone
+          </label>
+          <input
+            className="rs-input"
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            maxLength={20}
+          />
         </div>
         <button onClick={submit} disabled={loading} className="rs-btn rs-btn-primary w-full">
           {loading ? <Loader2 className="animate-spin" size={18} /> : <Plus size={18} />}
