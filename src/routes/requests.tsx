@@ -7,6 +7,7 @@ import { BottomSheet } from "@/components/BottomSheet";
 import { BloodTypeSelector } from "@/components/BloodTypeSelector";
 import { CitySelector } from "@/components/CitySelector";
 import type { BloodType } from "@/lib/blood";
+import { closeBloodRequest, closeSosAlert } from "@/lib/public.functions";
 import { Phone, Plus, Loader2, CheckCircle, Siren } from "lucide-react";
 
 export const Route = createFileRoute("/requests")({
@@ -99,18 +100,21 @@ function RequestsPage() {
   }, []);
 
   const markFulfilled = async (id: string) => {
-    const { error } = await supabase
-      .from("blood_requests")
-      .update({ status: "fulfilled" })
-      .eq("id", id);
-    if (error) toast.error("Failed to update");
-    else toast.success("Marked fulfilled");
+    try {
+      await closeBloodRequest({ data: { id } });
+      toast.success("Marked fulfilled");
+    } catch {
+      toast.error("Failed to update");
+    }
   };
 
   const resolveSos = async (id: string) => {
-    const { error } = await supabase.from("sos_alerts").update({ status: "resolved" }).eq("id", id);
-    if (error) toast.error("Failed to update");
-    else toast.success("SOS resolved");
+    try {
+      await closeSosAlert({ data: { id } });
+      toast.success("SOS resolved");
+    } catch {
+      toast.error("Failed to update");
+    }
   };
 
   return (
