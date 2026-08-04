@@ -7,6 +7,7 @@ import { BottomSheet } from "@/components/BottomSheet";
 import { BloodTypeSelector } from "@/components/BloodTypeSelector";
 import { CitySelector } from "@/components/CitySelector";
 import type { BloodType } from "@/lib/blood";
+import { closeBloodRequest, closeSosAlert } from "@/lib/public.functions";
 import { Phone, Plus, Loader2, CheckCircle, Siren } from "lucide-react";
 
 export const Route = createFileRoute("/requests")({
