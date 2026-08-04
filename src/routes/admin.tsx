@@ -487,23 +487,22 @@ function RequestsTab({
   const filtered = requests.filter((r) => filter === "all" || r.status === filter);
 
   const fulfill = async (id: string) => {
-    const { error } = await supabase
-      .from("blood_requests")
-      .update({ status: "fulfilled" })
-      .eq("id", id);
-    if (error) toast.error("Update failed");
-    else {
+    try {
+      await adminSetStatus({ data: { table: "blood_requests", id, status: "fulfilled" } });
       toast.success("Marked fulfilled");
       reload();
+    } catch {
+      toast.error("Update failed");
     }
   };
   const remove = (r: Req) => {
     askConfirm("Delete request?", `Permanently delete the request for ${r.hospital}.`, async () => {
-      const { error } = await supabase.from("blood_requests").delete().eq("id", r.id);
-      if (error) toast.error("Delete failed");
-      else {
+      try {
+        await adminDeleteRow({ data: { table: "blood_requests", id: r.id } });
         toast.success("Request deleted");
         reload();
+      } catch {
+        toast.error("Delete failed");
       }
     });
   };
