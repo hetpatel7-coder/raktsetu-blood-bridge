@@ -390,23 +390,22 @@ function DonorsTab({
   );
 
   const toggle = async (d: Donor) => {
-    const { error } = await supabase
-      .from("donors")
-      .update({ available: !d.available })
-      .eq("id", d.id);
-    if (error) toast.error("Update failed");
-    else {
+    try {
+      await adminSetDonorAvailability({ data: { id: d.id, available: !d.available } });
       toast.success("Updated");
       reload();
+    } catch {
+      toast.error("Update failed");
     }
   };
   const remove = (d: Donor) => {
     askConfirm("Delete donor?", `Permanently remove ${d.name} from the donor list.`, async () => {
-      const { error } = await supabase.from("donors").delete().eq("id", d.id);
-      if (error) toast.error("Delete failed");
-      else {
+      try {
+        await adminDeleteRow({ data: { table: "donors", id: d.id } });
         toast.success("Donor deleted");
         reload();
+      } catch {
+        toast.error("Delete failed");
       }
     });
   };
