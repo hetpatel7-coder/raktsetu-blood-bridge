@@ -4,10 +4,15 @@ import { formatDistanceToNowStrict } from "date-fns";
 import toast from "react-hot-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { BLOOD_TYPES, CITIES } from "@/lib/blood";
+import {
+  adminLogin,
+  adminLogout,
+  adminStatus,
+  adminSetDonorAvailability,
+  adminSetStatus,
+  adminDeleteRow,
+} from "@/lib/admin.functions";
 import { Lock, Trash2, Search, LogOut } from "lucide-react";
-
-const ADMIN_PASSWORD = "admin123";
-const ADMIN_KEY = "raktsetu_admin_ok";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -24,10 +29,10 @@ function AdminPage() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setAuthed(sessionStorage.getItem(ADMIN_KEY) === "1");
-    }
-    setReady(true);
+    adminStatus()
+      .then((r) => setAuthed(r.admin))
+      .catch(() => setAuthed(false))
+      .finally(() => setReady(true));
   }, []);
 
   if (!ready) {
@@ -41,8 +46,8 @@ function AdminPage() {
   if (!authed) return <PasswordGate onSuccess={() => setAuthed(true)} />;
   return (
     <Dashboard
-      onLogout={() => {
-        sessionStorage.removeItem(ADMIN_KEY);
+      onLogout={async () => {
+        await adminLogout().catch(() => {});
         setAuthed(false);
       }}
     />
@@ -51,15 +56,23 @@ function AdminPage() {
 
 function PasswordGate({ onSuccess }: { onSuccess: () => void }) {
   const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      sessionStorage.setItem(ADMIN_KEY, "1");
-      toast.success("Welcome");
-      onSuccess();
-    } else {
-      toast.error("Incorrect password");
+    setBusy(true);
+    try {
+      const { ok } = await adminLogin({ data: { password } });
+      if (ok) {
+        toast.success("Welcome");
+        onSuccess();
+      } else {
+        toast.error("Incorrect password");
+      }
+    } catch {
+      toast.error("Login failed");
+    } finally {
+      setBusy(false);
     }
   };
 
@@ -85,7 +98,7 @@ function PasswordGate({ onSuccess }: { onSuccess: () => void }) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit" className="rs-btn rs-btn-primary w-full">
+        <button type="submit" disabled={busy} className="rs-btn rs-btn-primary w-full">
           Unlock
         </button>
       </form>
