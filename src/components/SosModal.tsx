@@ -74,11 +74,7 @@ export function SosModal({ open, onClose }: { open: boolean; onClose: () => void
           disabled={loading}
           className="rs-btn rs-btn-sos w-full animate-rs-pulse-glow"
         >
-          {loading ? (
-            <Loader2 className="animate-spin" size={18} />
-          ) : (
-            <Siren size={18} />
-          )}
+          {loading ? <Loader2 className="animate-spin" size={18} /> : <Siren size={18} />}
           {loading ? "Sending…" : "Send SOS Alert"}
         </button>
       </div>

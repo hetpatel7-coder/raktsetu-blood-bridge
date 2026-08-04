@@ -11,8 +11,7 @@ export const Route = createFileRoute("/")({
       { title: "RaktSetu — Real-Time Blood Donor Network" },
       {
         name: "description",
-        content:
-          "Find blood donors near you in seconds. Built for Gujarat. Ek Boond, Ek Zindagi.",
+        content: "Find blood donors near you in seconds. Built for Gujarat. Ek Boond, Ek Zindagi.",
       },
       { property: "og:title", content: "RaktSetu — Real-Time Blood Donor Network" },
       {
@@ -44,15 +43,7 @@ function useCountUp(target: number, duration = 900) {
   return n;
 }
 
-function StatCard({
-  value,
-  label,
-  loading,
-}: {
-  value: number;
-  label: string;
-  loading: boolean;
-}) {
+function StatCard({ value, label, loading }: { value: number; label: string; loading: boolean }) {
   const n = useCountUp(value);
   return (
     <div className="rs-card rs-card-hover p-4 sm:p-5">
@@ -63,9 +54,7 @@ function StatCard({
           {n}
         </div>
       )}
-      <div className="rs-pill text-muted-foreground mt-2">
-        {label}
-      </div>
+      <div className="rs-pill text-muted-foreground mt-2">{label}</div>
     </div>
   );
 }
@@ -85,10 +74,7 @@ function HomePage() {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const [d, s, t] = await Promise.all([
-        supabase
-          .from("donors")
-          .select("*", { count: "exact", head: true })
-          .eq("available", true),
+        supabase.from("donors").select("*", { count: "exact", head: true }).eq("available", true),
         supabase
           .from("blood_requests")
           .select("*", { count: "exact", head: true })
@@ -153,9 +139,7 @@ function HomePage() {
           <span style={{ color: "#dc2626" }}>Setu</span>
           <span className="sr-only"> — Gujarat's Blood Bridge</span>
         </h1>
-        <p className="rs-tagline-en">
-          One Drop, One Life — Gujarat's Blood Bridge
-        </p>
+        <p className="rs-tagline-en">One Drop, One Life — Gujarat's Blood Bridge</p>
       </header>
 
       {/* Live stats */}
@@ -205,7 +189,7 @@ function HomePage() {
       {/* Share with someone */}
       <a
         href={`https://wa.me/?text=${encodeURIComponent(
-          `🩸 RaktSetu — Real-time blood donor network for Gujarat.\n\nFind verified donors near you in seconds, or register to save lives.\n\nhttps://raktsetu-blood-bridge.vercel.app\n\n— Ek Boond, Ek Zindagi`
+          `🩸 RaktSetu — Real-time blood donor network for Gujarat.\n\nFind verified donors near you in seconds, or register to save lives.\n\nhttps://raktsetu-blood-bridge.vercel.app\n\n— Ek Boond, Ek Zindagi`,
         )}`}
         target="_blank"
         rel="noopener noreferrer"
@@ -283,9 +267,7 @@ function HomePage() {
               >
                 STEP {s.n}
               </div>
-              <div className="font-serif font-bold text-lg mt-2 leading-snug">
-                {s.t}
-              </div>
+              <div className="font-serif font-bold text-lg mt-2 leading-snug">{s.t}</div>
               <div className="rs-body-sm mt-2 leading-relaxed">{s.d}</div>
             </div>
           ))}
@@ -294,10 +276,7 @@ function HomePage() {
 
       {/* Footer */}
       <footer className="pt-8 pb-6 text-center space-y-1.5">
-        <p
-          className="font-serif font-bold"
-          style={{ fontSize: 13, color: "#333" }}
-        >
+        <p className="font-serif font-bold" style={{ fontSize: 13, color: "#333" }}>
           RaktSetu · Gujarat, India
         </p>
         <p

@@ -22,8 +22,8 @@ export function DisclaimerFooter() {
           }}
         >
           RaktSetu is a donor–patient communication platform. Not a medical service. Blood
-          transfusion must happen at a certified medical facility. In a life-threatening
-          emergency always call{" "}
+          transfusion must happen at a certified medical facility. In a life-threatening emergency
+          always call{" "}
           <a
             href="tel:108"
             style={{ color: "#dc2626", fontWeight: 500 }}
@@ -33,10 +33,7 @@ export function DisclaimerFooter() {
           </a>{" "}
           first.
         </p>
-        <p
-          className="font-serif"
-          style={{ color: "#555", fontSize: 11 }}
-        >
+        <p className="font-serif" style={{ color: "#555", fontSize: 11 }}>
           RaktSetu · Gujarat, India
         </p>
       </div>

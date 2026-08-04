@@ -5,12 +5,12 @@ export const CITIES = ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Gandhinagar"
 
 // Recipient -> compatible donor types
 export const COMPATIBILITY: Record<BloodType, BloodType[]> = {
-  "O+":  ["O+", "O-"],
-  "O-":  ["O-"],
-  "A+":  ["A+", "A-", "O+", "O-"],
-  "A-":  ["A-", "O-"],
-  "B+":  ["B+", "B-", "O+", "O-"],
-  "B-":  ["B-", "O-"],
+  "O+": ["O+", "O-"],
+  "O-": ["O-"],
+  "A+": ["A+", "A-", "O+", "O-"],
+  "A-": ["A-", "O-"],
+  "B+": ["B+", "B-", "O+", "O-"],
+  "B-": ["B-", "O-"],
   "AB+": ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
   "AB-": ["A-", "B-", "AB-", "O-"],
 };

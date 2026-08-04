@@ -9,7 +9,10 @@ export const Route = createFileRoute("/heatmap")({
   head: () => ({
     meta: [
       { title: "Blood Stock Heatmap — RaktSetu" },
-      { name: "description", content: "Real-time city-wise blood shortage heatmap across Gujarat." },
+      {
+        name: "description",
+        content: "Real-time city-wise blood shortage heatmap across Gujarat.",
+      },
       { property: "og:title", content: "Blood Stock Heatmap — RaktSetu" },
       { property: "og:description", content: "Live shortage map across 5 Gujarat cities." },
     ],
@@ -132,7 +135,6 @@ function HeatmapPage() {
       clearInterval(poll);
       clearInterval(tick);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /* Derived */
@@ -170,8 +172,7 @@ function HeatmapPage() {
 
   const statewideTotals = useMemo(() => {
     const out: Record<BloodType, number> = {} as Record<BloodType, number>;
-    for (const b of BLOOD_TYPES)
-      out[b] = CITIES.reduce((s, c) => s + counts[c][b], 0);
+    for (const b of BLOOD_TYPES) out[b] = CITIES.reduce((s, c) => s + counts[c][b], 0);
     return out;
   }, [counts]);
 
@@ -350,10 +351,10 @@ function HeatmapPage() {
                   {lv === "good"
                     ? "(6+)"
                     : lv === "moderate"
-                    ? "(3–5)"
-                    : lv === "low"
-                    ? "(1–2)"
-                    : "(0)"}
+                      ? "(3–5)"
+                      : lv === "low"
+                        ? "(1–2)"
+                        : "(0)"}
                 </span>
               </span>
             </div>

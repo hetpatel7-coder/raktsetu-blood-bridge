@@ -11,7 +11,10 @@ export const Route = createFileRoute("/register")({
   head: () => ({
     meta: [
       { title: "Be a Donor — RaktSetu" },
-      { name: "description", content: "Join Gujarat's blood donor network in 30 seconds. Save lives." },
+      {
+        name: "description",
+        content: "Join Gujarat's blood donor network in 30 seconds. Save lives.",
+      },
       { property: "og:title", content: "Be a Donor — RaktSetu" },
       { property: "og:description", content: "Join the network. Save lives. 30 seconds." },
     ],
@@ -48,7 +51,9 @@ function RegisterPage() {
       return;
     }
     if (!allChecked) {
-      toast.error("You must meet all criteria to register as a donor. This ensures patient safety.");
+      toast.error(
+        "You must meet all criteria to register as a donor. This ensures patient safety.",
+      );
       return;
     }
     setLoading(true);
@@ -99,9 +104,7 @@ function RegisterPage() {
             </div>
           </div>
         </div>
-        <p className="rs-body px-4">
-          You'll receive alerts when someone nearby needs your blood.
-        </p>
+        <p className="rs-body px-4">You'll receive alerts when someone nearby needs your blood.</p>
         <a href="/" className="rs-btn rs-btn-secondary inline-flex">
           Back to Home
         </a>
@@ -123,9 +126,7 @@ function RegisterPage() {
         <div className="font-serif font-bold text-xl leading-snug">
           One donation. <span style={{ color: "#dc2626" }}>Three</span> lives.
         </div>
-        <div className="rs-body-sm mt-1.5">
-          India needs 2.5 crore units every year.
-        </div>
+        <div className="rs-body-sm mt-1.5">India needs 2.5 crore units every year.</div>
       </div>
 
       <div className="rs-card p-5 space-y-5">
